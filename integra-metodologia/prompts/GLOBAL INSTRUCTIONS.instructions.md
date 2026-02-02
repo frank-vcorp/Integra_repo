@@ -1,9 +1,9 @@
 ---
 applyTo: '**'
 ---
-# 🧬 NÚCLEO DE GOBERNANZA: METODOLOGÍA INTEGRA v2.1.1
+# 🧬 NÚCLEO DE GOBERNANZA: METODOLOGÍA INTEGRA v2.5.0
 
-Usted es parte del ecosistema de agentes IA de Frank Saavedra. Su comportamiento debe regirse estrictamente por los protocolos de la Metodología INTEGRA v2.1.1.
+Usted es parte del ecosistema de agentes IA de Frank Saavedra. Su comportamiento debe regirse estrictamente por los protocolos de la Metodología INTEGRA v2.5.0.
 
 ### 1. 🆔 IDENTIDAD Y TRAZABILIDAD
 * **Idioma:** Comuníquese siempre en español neutro y técnico.
@@ -11,17 +11,74 @@ Usted es parte del ecosistema de agentes IA de Frank Saavedra. Su comportamiento
 * **Prefijos:** `ARCH` (Arquitectura), `IMPL` (Implementación), `INFRA` (Infraestructura), `FIX` (Debugging), `DOC` (Documentación).
 * **Marca de Agua:** Todo código modificado debe incluir un comentario JSDoc con el ID y la ruta del documento de respaldo.
 
-### 2. 🚦 GESTIÓN DE ESTADOS Y CALIDAD
+### 2. 📚 BIBLIOTECA DE REFERENCIA
+
+La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metodologia/`.
+
+**REGLA OBLIGATORIA:** Antes de generar cualquier documento (SPEC, ADR, Dictamen, Handoff), busca y lee la plantilla correspondiente en:
+
+| Documento | Ubicación |
+|-----------|-----------|
+| Metodología completa | `integra-metodologia/METODOLOGIA-INTEGRA.md` |
+| SPEC de Código | `integra-metodologia/meta/SPEC-CODIGO.md` |
+| Sistema Handoff | `integra-metodologia/meta/sistema-handoff.md` |
+| Soft Gates | `integra-metodologia/meta/soft-gates.md` |
+| Plantilla SPEC | `integra-metodologia/meta/plantilla_SPEC.md` |
+| Plantilla ADR | `integra-metodologia/meta/plantillas/ADR.md` |
+| Plantilla Dictamen | `integra-metodologia/meta/plantillas/DICTAMEN.md` |
+| Plantilla Handoff | `integra-metodologia/meta/plantillas/HANDOFF_FEATURE.md` |
+| Plantilla Discovery | `integra-metodologia/meta/plantillas/DISCOVERY.md` |
+
+### 3. 🏗️ PARADIGMA DE HIBRIDACIÓN: VS Code + Antigravity
+
+Este ecosistema trabaja en **dos fases secuenciales** según el entorno:
+
+#### FASE 1: VS Code (El Taller) - "Construir el músculo"
+**AQUÍ se hace TODO lo estructural:**
+
+| Categoría | Tareas |
+|-----------|--------|
+| **Infraestructura** | Docker, docker-compose, gestión de contenedores y puertos |
+| **Backend** | Lógica de negocio, SQL, esquemas de DB, cálculos críticos |
+| **Integraciones** | APIs externas, pasarelas de pago, claves sensibles |
+| **Scaffolding** | Estructura de carpetas, archivos base, dependencias (npm, composer) |
+| **Git** | Ramas, commits, conflictos, push, tags de seguridad |
+
+**Resultado:** App 100% funcional pero visualmente básica ("fea").
+
+#### FASE 2: Antigravity (El Estudio) - "Pulir los acabados"
+**ALLÁ se hace TODO lo visual y de refinamiento:**
+
+| Categoría | Tareas |
+|-----------|--------|
+| **UI/UX** | Transformar HTML básico en diseño responsive con Tailwind |
+| **Estilos** | Colores, sombras, tipografías, animaciones |
+| **Responsive** | Adaptar para móvil, tablet, desktop |
+| **Refactorización** | Limpiar código, estandarizar, optimizar |
+| **Documentación** | JSDoc/PHPDoc, comentarios, marcas de agua |
+| **QA** | Errores de sintaxis, variables no usadas, validaciones |
+
+**Resultado:** App funcional Y bonita.
+
+#### Punto de Corte: Tag `ready-for-polish`
+Antes de pasar a Antigravity, crear tag de seguridad:
+```bash
+git tag ready-for-polish
+git push origin ready-for-polish
+```
+Este tag permite restaurar si Antigravity rompe algo.
+
+### 4. 🚦 GESTIÓN DE ESTADOS Y CALIDAD
 * **Fuente de Verdad:** Consulte siempre `PROYECTO.md` para validar el backlog y estados.
 * **Soft Gates:** No marque tareas como `[✓] Completado` sin validar los 4 Gates: Compilación, Testing, Revisión y Documentación.
 * **Priorización:** Use la fórmula: $Puntaje = (Valor \times 3) + (Urgencia \times 2) - (Complejidad \times 0.5)$.
 
-### 3. 🛡️ PROTOCOLOS ESPECÍFICOS
+### 5. 🛡️ PROTOCOLOS ESPECÍFICOS
 * **Debugging (DEBY):** Requiere un ID tipo `FIX` y un Dictamen Técnico en `context/interconsultas/` antes de aplicar cambios.
 * **Handoff:** Al finalizar, genere un resumen según el Sistema de Handoff para el siguiente agente.
-* **Estándares:** Siga `SPEC-CODIGO.md` y priorice el "Principio del Cañón y la Mosca".
+* **Estándares:** Siga `integra-metodologia/meta/SPEC-CODIGO.md` y priorice el "Principio del Cañón y la Mosca".
 
-### 4. 🔄 SISTEMA DE HANDOFF E INTERCONSULTAS
+### 6. 🔄 SISTEMA DE HANDOFF E INTERCONSULTAS
 
 #### A. Matriz de Escalamiento
 | Situación | Agente a Invocar | Trigger |
@@ -71,13 +128,13 @@ El prompt DEBE incluir:
 #### E. Al Recibir Handoff
 Antes de actuar, buscar en `context/interconsultas/` si hay dictámenes o instrucciones pendientes dirigidas a ti.
 
-### 5. 🔙 PROTOCOLO DE ROLLBACK
+### 7. 🔙 PROTOCOLO DE ROLLBACK
 * **Autoridad:** GEMINI o INTEGRA pueden ordenar rollback.
 * **Acción:** Ejecutar `git revert [commit]` + crear nuevo Checkpoint explicando razón.
 * **Notificación:** Invocar `CRONISTA-Estados-Notas` para actualizar estados en `PROYECTO.md`.
 * **Documentación:** Registrar en `context/interconsultas/` el motivo del rollback.
 
-### 6. 📊 DEUDA TÉCNICA
+### 8. 📊 DEUDA TÉCNICA
 * **Registro:** Toda deuda técnica debe registrarse en la sección "Deuda Técnica" de `PROYECTO.md`.
 * **Formato:** `| DT-NNN | Descripción | Impacto | Sprint Target |`
 * **Revisión:** CRONISTA valida mensualmente que no haya deuda técnica sin asignar.
