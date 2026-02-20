@@ -77,3 +77,9 @@ Al finalizar la sesión:
 - **Error de debugging**: \`runSubagent(agentName='Deby', prompt='Análisis requerido: [error y contexto]')\`
 - **Sincronizar backlog**: \`runSubagent(agentName='CRONISTA-Estados-Notas', prompt='Actualizar PROYECTO.md')\`
 - **Antes de empezar**: Revisa \`context/interconsultas/\` por handoffs pendientes dirigidos a ti.
+
+### Awareness de Qodo CLI
+SOFIA, GEMINI y Deby ejecutan Qodo CLI como segunda mano. Al delegar:
+- **Al delegar implementación a SOFIA**: Incluye en el handoff "Usar `qodo self-review` antes de commit y `qodo` para generar tests."
+- **Al solicitar auditoría a GEMINI**: Incluye "Complementar auditoría con `qodo` en modo `--permissions=r --plan`."
+- **Decisión sigue siendo tuya**: Qodo es herramienta de validación, no autoridad. No cambia SPECs ni arquitectura.

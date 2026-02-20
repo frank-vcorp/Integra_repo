@@ -849,16 +849,105 @@ Después del Discovery, INTEGRA debe crear:
 
 ---
 
-## 16. Ciclo de Mejora Continua
+## 16. Herramientas Complementarias: Qodo CLI
 
-### 16.1 Retrospectiva de Sprint
+### 16.1 ¿Qué es Qodo CLI?
+Qodo CLI (`@qodo/command`) es una herramienta de línea de comandos que permite ejecutar agentes IA desde la terminal. Los agentes de Copilot la invocan vía `run_in_terminal` como una "segunda mano" para obtener análisis independientes de testing, revisión y debugging.
+
+> **Principio:** Copilot gobierna, Qodo valida. Qodo NO toma decisiones — reporta hallazgos que los agentes INTEGRA evalúan e incorporan.
+
+### 16.2 Instalación y Autenticación
+```bash
+npm install -g @qodo/command
+qodo login    # Genera API key guardada en ~/.qodo
+```
+
+### 16.3 Rol en los Soft Gates
+
+| Soft Gate | Sin Qodo | Con Qodo CLI |
+|-----------|----------|-------------|
+| Gate 1: Compilación | `pnpm build` | Sin cambio |
+| Gate 2: Testing | Tests manuales por SOFIA | `qodo "Genera tests para [archivo]" --act -y -q` |
+| Gate 3: Revisión | GEMINI audita manualmente | `qodo self-review` + `qodo "Revisa [archivo]" --permissions=r` |
+| Gate 4: Documentación | Checkpoints manuales | Sin cambio |
+
+### 16.4 Comandos por Agente
+
+| Agente | Momento | Comando Qodo CLI |
+|--------|---------|-------------------|
+| **SOFIA** | Después de implementar (Gate 2) | `qodo "Genera tests unitarios para [archivo]" --act -y -q --tools=git,filesystem` |
+| **SOFIA** | Antes de commit (Gate 3) | `qodo self-review` |
+| **GEMINI** | Auditoría post-commit (Gate 3) | `qodo "Revisa los cambios del último commit buscando bugs, seguridad y code smells" --permissions=r -y -q` |
+| **GEMINI** | Revisión profunda | `qodo "Audita [módulo] según criterios de calidad: seguridad, performance, mantenibilidad" --plan -y -q --permissions=r` |
+| **Deby** | Análisis forense | `qodo "Analiza el error en [archivo]:[línea], identifica causa raíz" --plan --tools=git,filesystem --permissions=r -q` |
+| **Deby** | Validar fix pre-commit | `qodo self-review` |
+
+### 16.5 Flags Clave para Automatización
+
+| Flag | Función | Cuándo |
+|------|---------|--------|
+| `-y, --yes` | Auto-confirma prompts | Siempre (ejecución sin intervención humana) |
+| `-q, --silent` | Solo muestra resultado final | Siempre (salida limpia para parsear) |
+| `--act` | Ejecuta directo sin planificar | Tareas simples (generar tests) |
+| `--plan` | Planifica antes de actuar | Tareas complejas (auditorías, análisis forense) |
+| `--permissions=r` | Solo lectura | Revisiones y auditorías (no modifica código) |
+| `--tools=lista` | Restringe herramientas | Limitar acceso según necesidad |
+| `-m, --model=nombre` | Elige modelo IA | Cuando se necesita modelo específico |
+
+### 16.6 Chains (Encadenamiento de Agentes Qodo)
+
+Qodo permite encadenar tareas secuencialmente o en pipeline:
+
+```bash
+# Secuencial: mejora → revisa → abre PR
+qodo chain "improve > review > open-pr"
+
+# Pipeline: output de plan alimenta implement que alimenta test
+qodo chain "plan | implement | test"
+```
+
+Los agentes INTEGRA pueden usar chains para flujos complejos de validación.
+
+### 16.7 Agentes Custom (.toml)
+
+Se pueden crear agentes Qodo personalizados en `agent.toml` para flujos repetitivos:
+
+```toml
+# agent.toml en la raíz del proyecto
+[commands.integra-review]
+description = "Review de código estilo INTEGRA"
+instructions = """
+Revisa el código según los criterios de INTEGRA:
+1. Seguridad (no secretos hardcodeados, validaciones)
+2. Performance (queries optimizados, no N+1)
+3. Mantenibilidad (nombres claros, funciones pequeñas)
+4. Convenciones (SPEC-CODIGO.md)
+Reporta hallazgos con severidad: CRÍTICO / MEDIO / BAJO.
+"""
+tools = ["git", "filesystem", "ripgrep"]
+```
+
+Ejecutar: `qodo run integra-review`
+
+### 16.8 Reglas de Uso
+
+1. **Qodo NO modifica código sin supervisión** — Usar `--permissions=r` para auditorías.
+2. **Hallazgos se documentan** — Issues críticos de Qodo se registran en el Checkpoint Enriquecido.
+3. **Principio Cañón y la Mosca** — Si `pnpm test` basta, no usar Qodo.
+4. **Modelo independiente** — Qodo usa su propio modelo IA, dando una segunda opinión real.
+
+---
+
+## 17. Ciclo de Mejora Continua
+
+### 17.1 Retrospectiva de Sprint
 Al final de cada sprint, CRONISTA facilita una retrospectiva:
 1. ✅ Qué funcionó bien
 2. ❌ Qué no funcionó
 3. 🎯 Acciones de mejora
 4. 📝 Ajustes a la metodología
 
-### 15.2 Versionado de la Metodología
+### 17.2 Versionado de la Metodología
 Cambios a INTEGRA se documentan en este archivo con:
 - Número de versión semántico
 - Fecha de cambio
@@ -866,7 +955,15 @@ Cambios a INTEGRA se documentan en este archivo con:
 
 ---
 
-## 17. Historial de Versiones
+## 18. Historial de Versiones
+
+### v2.5.0 (2026-02-20)
+- ✨ **Integración de Qodo CLI** (`@qodo/command`) - Segunda mano para testing y revisión vía terminal
+- ✨ **Mapeo Qodo ↔ Soft Gates** - Comandos CLI alineados a Gates 2 y 3
+- ✨ **Flags de automatización** - `-y -q --act --plan --permissions` para ejecución por agentes
+- ✨ **Chains de Qodo** - Encadenamiento de tareas secuenciales y pipelines
+- ✨ **Agentes custom .toml** - Definición de flujos Qodo reutilizables por proyecto
+- 🔧 **Regla:** Copilot gobierna, Qodo valida
 
 ### v2.4.0 (2026-01-26)
 - ✨ **Control de Versiones (Git)** - Guía completa de commits y push

@@ -128,6 +128,33 @@ El prompt DEBE incluir:
 #### E. Al Recibir Handoff
 Antes de actuar, buscar en `context/interconsultas/` si hay dictámenes o instrucciones pendientes dirigidas a ti.
 
+### 9. 🧪 SEGUNDA MANO: QODO CLI
+
+Qodo CLI (`@qodo/command`) está disponible en terminal como herramienta complementaria. Los agentes la ejecutan vía `run_in_terminal` para obtener análisis independientes.
+
+#### Principio Rector
+> **Copilot gobierna, Qodo valida.** Qodo NO toma decisiones — los agentes evalúan sus hallazgos.
+
+#### Comandos Principales
+| Comando | Función | Gate |
+|---------|---------|------|
+| `qodo "Genera tests para [archivo]" --act -y -q` | Genera tests unitarios | Gate 2 |
+| `qodo self-review` | Revisa cambios git agrupados lógicamente | Gate 3 |
+| `qodo "[instrucción de revisión]" --permissions=r -y -q` | Revisión de código en solo lectura | Gate 3 |
+| `qodo "[análisis de bug]" --plan --permissions=r -q` | Análisis forense con planificación | Apoyo a Deby |
+| `qodo chain "A > B > C"` | Encadena tareas secuencialmente | Flujos complejos |
+
+#### Protocolo
+1. **Ejecutar** el comando Qodo vía `run_in_terminal` en el momento apropiado del workflow.
+2. **Analizar** la salida del comando.
+3. **Documentar** hallazgos críticos en el Checkpoint Enriquecido.
+4. **Las decisiones las toma el agente**, no Qodo.
+
+#### Flags Obligatorios para Agentes
+* `-y` (auto-confirmar) + `-q` (solo resultado final) → Ejecución limpia sin intervención.
+* `--permissions=r` → Para revisiones (Qodo no modifica código).
+* `--act` vs `--plan` → Directo para tareas simples, planificado para análisis complejos.
+
 ### 7. 🔙 PROTOCOLO DE ROLLBACK
 * **Autoridad:** GEMINI o INTEGRA pueden ordenar rollback.
 * **Acción:** Ejecutar `git revert [commit]` + crear nuevo Checkpoint explicando razón.
