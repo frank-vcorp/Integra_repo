@@ -31,14 +31,14 @@ La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metod
 
 | Skill | Ubicación | Cuándo se activa |
 |-------|-----------|------------------|
-| Generar SPEC | `integra-metodologia/skills/generar-spec/` | Al planificar una feature |
-| Generar ADR | `integra-metodologia/skills/generar-adr/` | Al documentar decisiones de arquitectura |
-| Generar Dictamen | `integra-metodologia/skills/generar-dictamen/` | Al analizar un bug o error |
-| Generar Discovery | `integra-metodologia/skills/generar-discovery/` | Al entrar a un proyecto nuevo |
-| Generar Micro-Sprint | `integra-metodologia/skills/generar-micro-sprint/` | Al iniciar una sesión de trabajo |
-| Generar Checkpoint | `integra-metodologia/skills/generar-checkpoint/` | Al completar una tarea o entrega |
-| Generar Handoff | `integra-metodologia/skills/generar-handoff/` | Al transferir trabajo entre agentes |
-| Generar Retro | `integra-metodologia/skills/generar-retro/` | Al cerrar un sprint |
+| Generar SPEC | `.github/skills/generar-spec/` | Al planificar una feature |
+| Generar ADR | `.github/skills/generar-adr/` | Al documentar decisiones de arquitectura |
+| Generar Dictamen | `.github/skills/generar-dictamen/` | Al analizar un bug o error |
+| Generar Discovery | `.github/skills/generar-discovery/` | Al entrar a un proyecto nuevo |
+| Generar Micro-Sprint | `.github/skills/generar-micro-sprint/` | Al iniciar una sesión de trabajo |
+| Generar Checkpoint | `.github/skills/generar-checkpoint/` | Al completar una tarea o entrega |
+| Generar Handoff | `.github/skills/generar-handoff/` | Al transferir trabajo entre agentes |
+| Generar Retro | `.github/skills/generar-retro/` | Al cerrar un sprint |
 
 ### 3. 👥 ECOSISTEMA DE AGENTES (5 Agentes)
 
