@@ -182,12 +182,14 @@ La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metod
 | Documento | Ubicación |
 |-----------|-----------|
 | Metodología completa | `integra-metodologia/METODOLOGIA-INTEGRA.md` |
-| SPEC de Código | `integra-metodologia/meta/SPEC-CODIGO.md` |
-| Sistema Handoff | `integra-metodologia/meta/sistema-handoff.md` |
-| Soft Gates | `integra-metodologia/meta/soft-gates.md` |
-| Criterios de Calidad | `integra-metodologia/meta/criterios_calidad.md` |
 
-**Skills (se activan automáticamente al generar documentos):**
+**Instructions (aplican automáticamente al editar código):**
+
+| Instrucción | Ubicación | Aplica a |
+|-------------|-----------|----------|
+| SPEC de Código | `.github/instructions/SPEC-CODIGO.instructions.md` | `**/*.{ts,tsx,js,jsx,css,sql,php,py}` |
+
+**Skills (se activan automáticamente por contexto):**
 
 | Skill | Ubicación | Cuándo se activa |
 |-------|-----------|------------------|
@@ -198,6 +200,9 @@ La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metod
 | Generar Micro-Sprint | `.github/skills/generar-micro-sprint/` | Al iniciar una sesión de trabajo |
 | Generar Checkpoint | `.github/skills/generar-checkpoint/` | Al completar una tarea o entrega |
 | Generar Handoff | `.github/skills/generar-handoff/` | Al transferir trabajo entre agentes |
+| Generar Retro | `.github/skills/generar-retro/` | Al cerrar un sprint |
+| Auditar Calidad | `.github/skills/auditar-calidad/` | Al auditar calidad del proyecto |
+| Validar Soft Gates | `.github/skills/validar-soft-gates/` | Al cerrar una tarea (4 gates) |
 | Generar Retro | `.github/skills/generar-retro/` | Al cerrar un sprint |
 
 ---
@@ -746,7 +751,7 @@ Toda deuda técnica se registra en `PROYECTO.md`:
 * **GEMINI:** Configura hosting, valida Soft Gates, revisa código (`INFRA`), audita calidad.
 * **DEBY:** Requiere un ID tipo `FIX` y un Dictamen Técnico en `context/interconsultas/` antes de aplicar cambios.
 * **CRONISTA:** Mantiene `PROYECTO.md` como fuente de verdad, sincroniza estados, facilita retrospectivas.
-* **Estándares:** Todos siguen `integra-metodologia/meta/SPEC-CODIGO.md` y priorizan el "Principio del Cañón y la Mosca".
+* **Estándares:** Todos siguen `.github/instructions/SPEC-CODIGO.instructions.md` (se aplica automáticamente) y priorizan el "Principio del Cañón y la Mosca".
 * **Secretos:** PROHIBIDO loggear API keys, hardcodear credenciales, o mostrar contenido de `.env`.
 
 ---
@@ -855,7 +860,8 @@ Los archivos de configuración viven en la **raíz del repositorio** del proyect
 - ✨ **PR obligatorio antes de QA** — SOFIA debe abrir PR con `openPullRequest` antes de solicitar auditoría
 - ✨ **Archivos de configuración** — `.coderabbit.yaml` y `.qodo.toml` en raíz del repo
 - 🔧 **Flujo:** SOFIA (abre PR) → Bots (analizan) → GEMINI (valida feedback) → SOFIA (refactoriza si aplica)
-- 🔧 **Antigravity marcado como opcional** en Sección 7, GLOBAL INSTRUCTIONS y AGENTS.md
+- 🔧 **Antigravity marcado como opcional** en Sección 7 y GLOBAL INSTRUCTIONS
+- 🔧 **AGENTS.md eliminado** — contenido absorbido por GLOBAL INSTRUCTIONS (secciones 3 y 8)
 
 ### v3.0.0 (2026-02-25)
 - 🔄 **Unificación con Antigravity** - Estructura completa alineada entre VS Code (5 agentes) y Antigravity (3 agentes)

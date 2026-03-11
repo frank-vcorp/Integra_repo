@@ -22,12 +22,14 @@ La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metod
 | Documento | Ubicación |
 |-----------|-----------|
 | Metodología completa | `integra-metodologia/METODOLOGIA-INTEGRA.md` |
-| SPEC de Código | `integra-metodologia/meta/SPEC-CODIGO.md` |
-| Sistema Handoff | `integra-metodologia/meta/sistema-handoff.md` |
-| Soft Gates | `integra-metodologia/meta/soft-gates.md` |
-| Criterios de Calidad | `integra-metodologia/meta/criterios_calidad.md` |
 
-**Skills (se activan automáticamente al generar documentos):**
+**Instructions (aplican automáticamente al editar código):**
+
+| Instrucción | Ubicación | Aplica a |
+|-------------|-----------|----------|
+| SPEC de Código | `.github/instructions/SPEC-CODIGO.instructions.md` | `**/*.{ts,tsx,js,jsx,css,sql,php,py}` |
+
+**Skills (se activan automáticamente por contexto):**
 
 | Skill | Ubicación | Cuándo se activa |
 |-------|-----------|------------------|
@@ -39,6 +41,8 @@ La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metod
 | Generar Checkpoint | `.github/skills/generar-checkpoint/` | Al completar una tarea o entrega |
 | Generar Handoff | `.github/skills/generar-handoff/` | Al transferir trabajo entre agentes |
 | Generar Retro | `.github/skills/generar-retro/` | Al cerrar un sprint |
+| Auditar Calidad | `.github/skills/auditar-calidad/` | Al auditar calidad del proyecto |
+| Validar Soft Gates | `.github/skills/validar-soft-gates/` | Al cerrar una tarea (4 gates) |
 
 ### 3. 👥 ECOSISTEMA DE AGENTES (5 Agentes)
 
@@ -124,7 +128,7 @@ Este tag permite restaurar si Antigravity rompe algo.
 * **GEMINI:** Configura hosting, valida Soft Gates, revisa código (`INFRA`), audita calidad.
 * **DEBY:** Requiere un ID tipo `FIX` y un Dictamen Técnico en `context/interconsultas/` antes de aplicar cambios.
 * **CRONISTA:** Mantiene `PROYECTO.md` como fuente de verdad, sincroniza estados.
-* **Estándares:** Siga `integra-metodologia/meta/SPEC-CODIGO.md`.
+* **Estándares:** Siga `.github/instructions/SPEC-CODIGO.instructions.md` (se aplica automáticamente al editar código).
 * **Secretos:** PROHIBIDO loggear API keys, hardcodear credenciales, o mostrar contenido de `.env`.
 
 ### 8. 🔄 SISTEMA DE HANDOFF E INTERCONSULTAS

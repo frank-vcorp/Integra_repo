@@ -34,11 +34,9 @@ mkdir -p "$DESTINO"
 
 # Copiar estructura
 echo -e "${YELLOW}📁 Copiando estructura de carpetas...${NC}"
-cp -r "$SCRIPT_DIR/meta" "$DESTINO/"
 cp -r "$SCRIPT_DIR/context" "$DESTINO/"
 cp -r "$SCRIPT_DIR/Checkpoints" "$DESTINO/"
 cp "$SCRIPT_DIR/PROYECTO.md" "$DESTINO/"
-cp "$SCRIPT_DIR/AGENTS.md" "$DESTINO/"
 
 # Reemplazar placeholder del nombre del proyecto
 echo -e "${YELLOW}📝 Configurando nombre del proyecto...${NC}"

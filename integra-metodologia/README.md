@@ -68,10 +68,10 @@ cp -r integra-metodologia/* /ruta/a/tu/proyecto/
 ```
 
 ### Opción 3: Manual
-1. Copia la carpeta `meta/` a tu proyecto
-2. Copia `PROYECTO.md` y `AGENTS.md` a la raíz
-3. Crea la carpeta `context/` con las subcarpetas
-4. Instala los prompts en VS Code (ver sección Prompts)
+1. Copia `PROYECTO.md` a la raíz de tu proyecto
+2. Crea la carpeta `context/` con las subcarpetas
+3. Instala los prompts en VS Code (ver sección Prompts)
+4. Las Skills (`.github/skills/`) e Instructions (`.github/instructions/`) se aplican automáticamente
 
 ---
 
@@ -80,7 +80,6 @@ cp -r integra-metodologia/* /ruta/a/tu/proyecto/
 ```
 integra-metodologia/
 ├── README.md                    # Este archivo
-├── AGENTS.md                    # Documentación del ecosistema de agentes
 ├── PROYECTO.md                  # Plantilla de backlog y estados
 │
 ├── prompts/                     # Prompts para VS Code Copilot
@@ -91,18 +90,6 @@ integra-metodologia/
 │   ├── CRONISTA-Estados-Notas.agent.md
 │   └── Deby.agent.md
 │
-├── meta/                        # Estándares y plantillas
-│   ├── SPEC-CODIGO.md          # Convenciones de código
-│   ├── criterios_calidad.md    # Checklist de calidad
-│   ├── plantilla_control.md    # Formato de Checkpoints
-│   ├── plantilla_SPEC.md       # Formato de especificaciones
-│   └── plantillas/
-│       ├── HANDOFF_FEATURE.md  # Plantilla de handoff
-│       ├── DICTAMEN.md         # Plantilla de dictamen forense
-│       ├── ADR.md              # Plantilla de decisión arquitectónica
-│       ├── RETRO.md            # Plantilla de retrospectiva
-│       └── MICRO-SPRINT.md     # Plantilla de micro-sprint
-│
 ├── context/                     # Contexto del proyecto
 │   ├── dossier_tecnico.md      # Bitácora técnica
 │   ├── 00_ARQUITECTURA.md      # Propuesta arquitectónica
@@ -111,8 +98,25 @@ integra-metodologia/
 │
 ├── Checkpoints/                 # Puntos de control
 │
-└── scripts/
-    └── init-proyecto.sh        # Script de inicialización
+├── scripts/
+│   ├── init-proyecto.sh        # Script de inicialización
+│   ├── sync-prompts.sh         # Sincronizar prompts LOCAL ↔ REPO
+│   └── check-prompts.sh        # Auto-detectar prompts faltantes
+│
+└── .github/                     # VS Code native (en raíz del proyecto)
+    ├── instructions/
+    │   └── SPEC-CODIGO.instructions.md  # Convenciones de código (auto-apply)
+    └── skills/                  # 10 Skills activas
+        ├── generar-spec/
+        ├── generar-adr/
+        ├── generar-dictamen/
+        ├── generar-discovery/
+        ├── generar-micro-sprint/
+        ├── generar-checkpoint/
+        ├── generar-handoff/
+        ├── generar-retro/
+        ├── auditar-calidad/
+        └── validar-soft-gates/
 ```
 
 ---
@@ -188,9 +192,9 @@ integra-metodologia/
 
 ## 📚 Documentación Adicional
 
-- [SPEC-CODIGO.md](meta/SPEC-CODIGO.md) - Convenciones de código
-- [criterios_calidad.md](meta/criterios_calidad.md) - Checklist de calidad
-- [AGENTS.md](AGENTS.md) - Guía completa de agentes
+- [SPEC-CODIGO.instructions.md](../.github/instructions/SPEC-CODIGO.instructions.md) - Convenciones de código (auto-apply en VS Code)
+- [auditar-calidad](../.github/skills/auditar-calidad/SKILL.md) - Checklist de calidad (Skill de VS Code)
+- [validar-soft-gates](../.github/skills/validar-soft-gates/SKILL.md) - Validación de 4 Gates (Skill de VS Code)
 
 ---
 
