@@ -1,0 +1,50 @@
+{
+  "name": "integra-metodologia",
+  "displayName": "INTEGRA Metodología",
+  "description": "Sistema multi-agente para desarrollo asistido por IA. Instala automáticamente skills, instructions, extensiones recomendadas y estructura de proyecto INTEGRA.",
+  "version": "3.1.0",
+  "publisher": "frank-vcorp",
+  "engines": {
+    "vscode": "^1.96.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "extensionDependencies": [
+    "GitHub.copilot-chat"
+  ],
+  "extensionPack": [
+    "GitHub.copilot-chat",
+    "Codium.codium"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "integra.initProject",
+        "title": "INTEGRA: Inicializar Proyecto"
+      },
+      {
+        "command": "integra.syncSkills",
+        "title": "INTEGRA: Sincronizar Skills e Instructions"
+      },
+      {
+        "command": "integra.checkGitHubApps",
+        "title": "INTEGRA: Verificar GitHub Apps (CodeRabbit + Qodo Merge)"
+      }
+    ]
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.96.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.0"
+  }
+}

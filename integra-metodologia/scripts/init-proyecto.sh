@@ -221,4 +221,39 @@ echo "  2. git init (si es nuevo)"
 echo "  3. Edita PROYECTO.md con tus tareas iniciales"
 echo "  4. Edita context/dossier_tecnico.md con los detalles de tu stack"
 echo ""
+
+# Crear .vscode/tasks.json para auto-check de skills al abrir proyecto
+VSCODE_DIR="$DESTINO/.vscode"
+TASKS_FILE="$VSCODE_DIR/tasks.json"
+if [ ! -f "$TASKS_FILE" ]; then
+    mkdir -p "$VSCODE_DIR"
+    cat > "$TASKS_FILE" << 'EOF'
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "INTEGRA: Verificar prompts y skills",
+      "type": "shell",
+      "command": "integra-check",
+      "options": {
+        "env": {
+          "PROJECT_DIR": "${workspaceFolder}"
+        }
+      },
+      "presentation": {
+        "reveal": "silent",
+        "panel": "shared",
+        "close": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
+EOF
+    echo -e "   ${GREEN}+ Creado:${NC} .vscode/tasks.json (auto-check al abrir)"
+fi
+
 echo -e "${GREEN}¡Listo para desarrollar con INTEGRA! 🚀${NC}"

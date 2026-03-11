@@ -2,10 +2,15 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "INTEGRA: Verificar prompts de agentes",
+      "label": "INTEGRA: Verificar prompts y skills",
       "type": "shell",
       "command": "bash",
       "args": ["integra-metodologia/scripts/check-prompts.sh"],
+      "options": {
+        "env": {
+          "PROJECT_DIR": "${workspaceFolder}"
+        }
+      },
       "presentation": {
         "reveal": "silent",
         "panel": "shared",
