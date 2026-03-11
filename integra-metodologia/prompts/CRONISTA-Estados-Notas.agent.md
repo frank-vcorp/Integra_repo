@@ -1,6 +1,6 @@
 ---
 description: "Administrador del Backlog - Mantiene PROYECTO.md actualizado, sincroniza estados y detecta inconsistencias"
-model: "Claude Haiku 4.5"
+model: "GPT-4o"
 tools: ['vscode', 'execute', 'read', 'agent', 'edit', 'search', 'web', 'todo', 'github.vscode-pull-request-github/issue_fetch', 'github.vscode-pull-request-github/suggest-fix', 'github.vscode-pull-request-github/searchSyntax', 'github.vscode-pull-request-github/doSearch', 'github.vscode-pull-request-github/renderIssues', 'github.vscode-pull-request-github/activePullRequest', 'github.vscode-pull-request-github/openPullRequest']
 ---
 # CRONISTA - Administrador de Estado | Metodología INTEGRA v3.1.0

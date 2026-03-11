@@ -104,7 +104,7 @@ integra-metodologia/
 | **SOFIA** | Builder / Implementadora | Claude Haiku 4.5 |
 | **GEMINI** | QA / Infra / Hosting | Gemini 3 Pro |
 | **DEBY** | Debugger Forense | Claude Opus 4.5 |
-| **CRONISTA** | Administrador de Estados | GPT-5.1 |
+| **CRONISTA** | Administrador de Estados | GPT-4o |
 
 ```
        ┌──────────┐
