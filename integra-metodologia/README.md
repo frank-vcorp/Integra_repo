@@ -1,8 +1,31 @@
-# 🧬 Metodología INTEGRA v2.4.0
+# 🧬 Metodología INTEGRA v3.1.0
 
 Sistema de gobernanza para proyectos de desarrollo con agentes IA especializados.
 
 > **📖 Documento completo:** [METODOLOGIA-INTEGRA.md](METODOLOGIA-INTEGRA.md)
+
+## ✨ Lo Nuevo en v3.1.0
+
+### 🤖 Auditoría Externa Automatizada
+Integración de bots revisores de código en cada PR:
+
+| Bot | Función | Config |
+|-----|---------|--------|
+| **CodeRabbit** | Revisión asertiva: código muerto, DRY, complejidad | `.coderabbit.yaml` |
+| **Qodo Merge** | Documentación de PR, tests, sugerencias | `.qodo.toml` |
+
+**Flujo:** SOFIA (abre PR) → Bots (analizan) → GEMINI (valida feedback) → SOFIA (refactoriza si aplica)
+
+---
+
+## ✨ Lo Nuevo en v3.0.0
+
+### Unificación VS Code + Antigravity (Opcional)
+- 20 secciones formales
+- 5 agentes especializados
+- Paradigma de hibridación (Antigravity es opcional)
+
+---
 
 ## ✨ Lo Nuevo en v2.4.0
 
