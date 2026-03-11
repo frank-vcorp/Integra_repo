@@ -21,7 +21,6 @@ La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metod
 
 | Documento | Ubicación | Notas |
 |-----------|-----------|-------|
-| Metodología completa | `integra-metodologia/METODOLOGIA-INTEGRA.md` | Referencia humana |
 | Contexto del proyecto | `.github/copilot-instructions.md` | **Leer primero** — brief del proyecto, stack, comandos verificados |
 
 **Instructions (aplican automáticamente al editar código):**

@@ -1,77 +1,51 @@
-# 🧬 Metodología INTEGRA v2.4.0
+# 🧬 Metodología INTEGRA v3.1.0
 
-Sistema de gobernanza para proyectos de desarrollo con agentes IA especializados.
+**INTEGRA** (Inteligencia Técnica y Gobernanza para Resultados Ágiles) es una metodología de desarrollo de software diseñada para equipos híbridos humano-IA. Define cómo múltiples agentes de IA especializados colaboran entre sí y con un director humano para entregar software de alta calidad con trazabilidad completa.
 
-> **📖 Documento completo:** [METODOLOGIA-INTEGRA.md](METODOLOGIA-INTEGRA.md)
+> "Cada decisión documentada, cada cambio trazable, cada agente responsable."
 
-## ✨ Lo Nuevo en v2.4.0
-
-### 📝 Control de Versiones (Git)
-Guía completa de cuándo hacer commit y push:
-
-| Evento | Acción |
-|--------|--------|
-| Tarea completada | Commit + Push |
-| Antes de cambio riesgoso | Commit `[WIP]` |
-| Fin de Micro-Sprint | Commit + Push |
-| Código que no compila | ❌ NUNCA push |
-
-**Conventional Commits:** `feat(scope): mensaje`
+**Autor:** Frank Saavedra
 
 ---
 
-## ✨ Lo Nuevo en v2.3.0
+## Principios Fundamentales
 
-### 🛑 Escalamiento Obligatorio al Humano
-Los agentes DEBEN detenerse y preguntar cuando:
-- **Mismo error 2 veces** → "¿Otro enfoque o lo revisas tú?"
-- **3 intentos fallidos** → "Necesito tu input"
-- **Cambio afecta >5 archivos** → "¿Confirmas?"
+### Trazabilidad Total
+- Cada intervención tiene un **ID único** (`ARCH-YYYYMMDD-NN`, `IMPL-...`, `FIX-...`, `INFRA-...`, `DOC-...`)
+- Cada archivo modificado tiene una **marca de agua** JSDoc
+- Cada decisión queda documentada en un **artefacto**
 
-**Regla del "No Adivinar":** Si no estoy 80% seguro, pregunto.
+### Fuente de Verdad Única
+`PROYECTO.md` es el documento central que refleja el estado real del proyecto.
 
-### 🔍 Discovery de Proyecto Nuevo
-Protocolo de onboarding cuando INTEGRA entra a un proyecto desconocido:
-1. Escanear estructura
-2. Identificar stack tecnológico
-3. Generar `context/00_ARQUITECTURA.md`
-4. Preguntar al humano contexto de negocio
+### Soft Gates de Calidad
+Ninguna tarea se marca como completada sin pasar 4 validaciones:
+1. Compilación sin errores
+2. Tests pasando
+3. Revisión de código/QA
+4. Documentación actualizada
 
----
+### Principio del Cañón y la Mosca
+> "Usa la herramienta más simple que resuelva el problema eficientemente."
 
-## ✨ Lo Nuevo en v2.2.0
-
-### Sistema de Micro-Sprints
-Trabajo por sesiones con **entregables demostrables**:
-
-> 🎯 **Regla de Oro:** "Si no lo puedo ver funcionando, no está terminado."
-
-- **Rituales de sesión** - Inicio y cierre estructurados
-- **Entregables tangibles** - Funcionalidad que el usuario puede VER
-- **Budget Points** - Sistema de estimación por puntos (1-5)
-- **Multi-proyecto** - Distribuye micro-sprints entre proyectos
-
-Ver sección completa en [METODOLOGIA-INTEGRA.md#11-sistema-de-micro-sprints](METODOLOGIA-INTEGRA.md#11-sistema-de-micro-sprints)
+### Especialización con Colaboración
+Cada agente tiene un rol específico pero pueden apoyarse vía interconsultas formales y handoffs estructurados.
 
 ---
 
 ## 🚀 Quick Start
 
-### Opción 1: Copiar a tu proyecto
-```bash
-cp -r integra-metodologia/* /ruta/a/tu/proyecto/
-```
-
-### Opción 2: Usar script de inicialización
+### Opción 1: Script de inicialización (recomendado)
 ```bash
 ./scripts/init-proyecto.sh /ruta/a/tu/proyecto "NombreProyecto"
 ```
+Esto crea: `PROYECTO.md`, `context/`, `Checkpoints/`, `.github/skills/`, `.github/instructions/`, `.github/copilot-instructions.md`, e instala los prompts en VS Code.
 
-### Opción 3: Manual
+### Opción 2: Manual
 1. Copia `PROYECTO.md` a la raíz de tu proyecto
-2. Crea la carpeta `context/` con las subcarpetas
-3. Instala los prompts en VS Code (ver sección Prompts)
-4. Las Skills (`.github/skills/`) e Instructions (`.github/instructions/`) se aplican automáticamente
+2. Crea la carpeta `context/` con subcarpetas `decisions/` e `interconsultas/`
+3. Copia `.github/skills/` e `.github/instructions/` a tu proyecto
+4. Instala los prompts en VS Code (`Ctrl+Shift+P` → "Open User Prompts Folder")
 
 ---
 
@@ -104,6 +78,7 @@ integra-metodologia/
 │   └── check-prompts.sh        # Auto-detectar prompts faltantes
 │
 └── .github/                     # VS Code native (en raíz del proyecto)
+    ├── copilot-instructions.md  # Brief del proyecto (se llena con Discovery)
     ├── instructions/
     │   └── SPEC-CODIGO.instructions.md  # Convenciones de código (auto-apply)
     └── skills/                  # 10 Skills activas
@@ -125,13 +100,12 @@ integra-metodologia/
 
 | Agente | Rol | Modelo Recomendado |
 |--------|-----|-------------------|
-| **INTEGRA - Arquitecto** | Product Owner / Arquitecto | Gemini 3 Pro |
-| **SOFIA - Builder** | Implementación de código | Claude Haiku 4.5 |
-| **GEMINI-CLOUD-QA** | QA / Infraestructura | Gemini 3 Pro |
-| **Deby** | Lead Debugger (Forense) | Claude Opus 4.5 |
+| **INTEGRA** | Arquitecto / Product Owner | Gemini 3 Pro |
+| **SOFIA** | Builder / Implementadora | Claude Haiku 4.5 |
+| **GEMINI** | QA / Infra / Hosting | Gemini 3 Pro |
+| **DEBY** | Debugger Forense | Claude Opus 4.5 |
 | **CRONISTA** | Administrador de Estados | GPT-5.1 |
 
-### Flujo de Interconsultas
 ```
        ┌──────────┐
  ┌────►│  DEBY    │◄────┐  (Solo recibe)
@@ -155,55 +129,29 @@ integra-metodologia/
 
 ---
 
-## 🔧 Instalación de Prompts en VS Code
-
-1. Abre VS Code
-2. `Ctrl+Shift+P` → "Preferences: Open User Prompts Folder"
-3. Copia todos los archivos de `prompts/` a esa carpeta
-4. Reinicia VS Code
-
----
-
 ## 📋 Flujo de Estados
 
 ```
 [ ] Pendiente → [/] En Progreso → [✓] Completado → [X] Aprobado (por humano)
 ```
 
-### Soft Gates (antes de marcar [✓])
-1. ✅ Compilación sin errores
-2. ✅ Tests pasando
-3. ✅ Revisión de código/QA
-4. ✅ Documentación actualizada
-
 ---
 
-## 🆔 Prefijos de ID
+## 🔄 Historial de Versiones
 
-| Prefijo | Uso | Ejemplo |
-|---------|-----|---------|
-| `ARCH` | Decisiones arquitectónicas | `ARCH-20260126-01` |
-| `IMPL` | Implementaciones | `IMPL-20260126-01` |
-| `FIX` | Debugging/Fixes | `FIX-20260126-01` |
-| `INFRA` | Infraestructura | `INFRA-20260126-01` |
-| `DOC` | Documentación | `DOC-20260126-01` |
-
----
-
-## 📚 Documentación Adicional
-
-- [SPEC-CODIGO.instructions.md](../.github/instructions/SPEC-CODIGO.instructions.md) - Convenciones de código (auto-apply en VS Code)
-- [auditar-calidad](../.github/skills/auditar-calidad/SKILL.md) - Checklist de calidad (Skill de VS Code)
-- [validar-soft-gates](../.github/skills/validar-soft-gates/SKILL.md) - Validación de 4 Gates (Skill de VS Code)
+| Versión | Fecha | Cambios principales |
+|---------|-------|---------------------|
+| **v3.1.0** | 2026-03-11 | Auditoría externa (CodeRabbit + Qodo Merge), Antigravity opcional, migración a VS Code Skills/Instructions, `copilot-instructions.md` como infraestructura |
+| **v3.0.0** | 2026-02-25 | Unificación VS Code + Antigravity, Micro-Sprints, Checkpoints, Discovery, Deuda Técnica, Git expandido, Rollback, Budget Points |
+| **v2.5.1** | 2026-02-03 | Paradigma de Hibridación, Qodo CLI |
+| **v2.4.0** | 2026-01-26 | Control de Versiones Git, Conventional Commits |
+| **v2.3.0** | 2026-01-26 | Escalamiento al Humano, Regla del "No Adivinar" |
+| **v2.2.0** | 2026-01-26 | Sistema de Micro-Sprints (v1) |
+| **v2.1.0** | 2026-01-01 | 5 agentes especializados, Soft Gates |
+| **v1.0.0** | 2025-10-01 | Versión inicial |
 
 ---
 
 ## 📄 Licencia
 
 MIT License - Libre para uso personal y comercial.
-
----
-
-**Autor:** Frank Saavedra  
-**Versión:** 2.1.1  
-**Última actualización:** 2026-01-26
