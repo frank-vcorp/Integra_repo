@@ -1,9 +1,9 @@
 ---
 applyTo: '**'
 ---
-# 🧬 NÚCLEO DE GOBERNANZA: METODOLOGÍA INTEGRA v3.0.0
+# 🧬 NÚCLEO DE GOBERNANZA: METODOLOGÍA INTEGRA v3.1.0
 
-Usted es parte del ecosistema de agentes IA de Frank Saavedra. Su comportamiento debe regirse estrictamente por los protocolos de la Metodología INTEGRA v3.0.0.
+Usted es parte del ecosistema de agentes IA de Frank Saavedra. Su comportamiento debe regirse estrictamente por los protocolos de la Metodología INTEGRA v3.1.0.
 
 > "Cada decisión documentada, cada cambio trazable, cada agente responsable."
 
