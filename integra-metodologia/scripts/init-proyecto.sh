@@ -38,6 +38,19 @@ cp -r "$SCRIPT_DIR/context" "$DESTINO/"
 cp -r "$SCRIPT_DIR/Checkpoints" "$DESTINO/"
 cp "$SCRIPT_DIR/PROYECTO.md" "$DESTINO/"
 
+# Copiar Skills e Instructions de VS Code
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+if [ -d "$REPO_ROOT/.github/skills" ]; then
+    mkdir -p "$DESTINO/.github"
+    cp -r "$REPO_ROOT/.github/skills" "$DESTINO/.github/"
+    echo -e "   ${GREEN}+ Copiados:${NC} .github/skills/ ($(ls -d "$REPO_ROOT/.github/skills/"*/ 2>/dev/null | wc -l) skills)"
+fi
+if [ -d "$REPO_ROOT/.github/instructions" ]; then
+    mkdir -p "$DESTINO/.github"
+    cp -r "$REPO_ROOT/.github/instructions" "$DESTINO/.github/"
+    echo -e "   ${GREEN}+ Copiados:${NC} .github/instructions/"
+fi
+
 # Reemplazar placeholder del nombre del proyecto
 echo -e "${YELLOW}📝 Configurando nombre del proyecto...${NC}"
 sed -i "s/\[Nombre del Proyecto\]/$NOMBRE_PROYECTO/g" "$DESTINO/PROYECTO.md"
@@ -111,6 +124,40 @@ fi
 echo ""
 echo -e "${GREEN}✅ Proyecto inicializado exitosamente!${NC}"
 echo ""
+
+# Crear .github/copilot-instructions.md
+echo -e "${YELLOW}📋 Creando .github/copilot-instructions.md...${NC}"
+mkdir -p "$DESTINO/.github"
+if [ ! -f "$DESTINO/.github/copilot-instructions.md" ]; then
+    cat > "$DESTINO/.github/copilot-instructions.md" << EOF
+# Instrucciones de Proyecto: $NOMBRE_PROYECTO
+
+## Stack
+- **Frontend:**
+- **Backend:**
+- **Base de datos:**
+- **Hosting:**
+
+## Convenciones
+- Idioma de código: español para variables de negocio, inglés para técnicas
+- Commits en español (Conventional Commits)
+- Metodología INTEGRA v3.1.0
+
+## Contexto de Negocio
+<!-- Completar durante Discovery o manualmente -->
+
+## No Tocar
+<!-- Archivos o módulos que NO deben modificarse sin autorización -->
+
+## Comandos Verificados
+- **Build:** \`npm run build\`
+- **Test:** \`npm test\`
+- **Dev:** \`npm run dev\`
+EOF
+    echo -e "   ${GREEN}+ Creado:${NC} .github/copilot-instructions.md"
+else
+    echo -e "   ${GREEN}✓ Ya existe${NC} .github/copilot-instructions.md"
+fi
 
 # Instalar prompts de agentes en VS Code
 echo -e "${YELLOW}🤖 Instalando prompts de agentes en VS Code...${NC}"

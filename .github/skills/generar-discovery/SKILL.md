@@ -28,7 +28,16 @@ Ejecutar en terminal:
 ### Paso 4: Formular Preguntas
 Generar preguntas específicas para el humano — solo las que NO puedes responder con el código.
 
-### Paso 5: Ubicación
+### Paso 5: Actualizar copilot-instructions.md
+Con los datos recopilados, actualizar `.github/copilot-instructions.md` con:
+1. Stack real detectado (Frontend, Backend, DB, Hosting)
+2. Comandos verificados (build, test, dev — solo los que funcionaron en Paso 3)
+3. Contexto de negocio (preguntar al humano si no es evidente)
+4. Archivos "No Tocar" (si el humano indicó restricciones)
+
+> Si el archivo no existe, crearlo. Si existe con placeholders, reemplazarlos con datos reales.
+
+### Paso 6: Ubicación del Discovery
 - Guardar en: `context/00_ARQUITECTURA.md` (documento principal)
 - O como discovery temporal en: `context/DISCOVERY-[nombre-proyecto].md`
 
