@@ -1,3 +1,45 @@
+---
+name: generar-retro
+description: "Genera una Retrospectiva de Sprint para evaluar qué funcionó, qué no, y definir acciones de mejora. USE FOR: al final de un sprint o ciclo de trabajo, cuando se quiere evaluar el proceso, para identificar mejoras a la metodología. DO NOT USE FOR: reportes de estado (usar CRONISTA), análisis de bugs (usar generar-dictamen)."
+---
+
+# Skill: Generar Retrospectiva de Sprint
+
+## Instrucciones
+
+### Paso 1: Recopilar Métricas
+Revisar `PROYECTO.md` y `context/checkpoints/` para obtener:
+- Tareas planificadas vs completadas
+- Bugs encontrados vs resueltos
+- Interconsultas a Deby realizadas
+- Rollbacks ejecutados
+
+### Paso 2: Análisis Honesto
+Para cada sección (Funcionó/No Funcionó):
+- Ser específico — no "la comunicación fue buena" sino "el handoff INTEGRA→SOFIA incluyó toda la info necesaria"
+- Incluir evidencia concreta (IDs de tareas, commits, situaciones)
+
+### Paso 3: Lecciones Accionables
+Cada lección debe tener:
+- Descripción del aprendizaje
+- Cómo aplicarlo en el próximo sprint
+- Si requiere cambio en la metodología, marcarlo
+
+### Paso 4: Acciones con Responsable
+Toda acción de mejora necesita:
+- Responsable (agente específico)
+- Deadline concreto
+- Prioridad (Alta/Media/Baja)
+
+### Paso 5: Ubicación
+- Guardar en: `context/retros/RETRO-Sprint-[N].md`
+- Notificar a CRONISTA para actualizar `PROYECTO.md`
+
+---
+
+## Plantilla
+
+```markdown
 # Retrospectiva: Sprint [N] - [Nombre]
 
 **Fecha:** YYYY-MM-DD  
@@ -78,14 +120,4 @@
 
 ### Foco Principal
 [Objetivo principal del próximo sprint]
-
-### Capacidad Estimada
-- Tareas: X
-- Complejidad: Alta/Media/Baja
-
-### Riesgos Anticipados
-- [Riesgo 1]
-
----
-
-*Retrospectiva generada bajo Metodología INTEGRA v2.1.1*
+```

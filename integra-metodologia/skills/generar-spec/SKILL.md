@@ -1,3 +1,41 @@
+---
+name: generar-spec
+description: "Genera una SPEC (especificación técnica) para una funcionalidad o feature. USE FOR: planificar una nueva funcionalidad, documentar requisitos técnicos, definir arquitectura de una feature, crear plan de implementación. DO NOT USE FOR: bugs (usar generar-dictamen), decisiones de arquitectura sin implementación (usar generar-adr)."
+---
+
+# Skill: Generar SPEC de Funcionalidad
+
+## Instrucciones
+
+### Paso 1: Recopilar Contexto
+Antes de generar la SPEC, necesitas:
+1. Leer `PROYECTO.md` para entender el estado actual del backlog
+2. Si existe `context/00_ARQUITECTURA.md`, revisarlo para alinearse con la arquitectura
+3. Preguntar al usuario si falta información crítica (objetivo, usuarios, restricciones)
+
+### Paso 2: Generar ID
+- Formato: `ARCH-YYYYMMDD-NN` (donde NN es secuencial del día)
+- Verificar en `context/SPECs/` que no exista un ID duplicado
+
+### Paso 3: Completar la SPEC
+Usa la plantilla de abajo. **NO dejes secciones vacías** — si no aplica, escribe "N/A" con justificación.
+
+### Paso 4: Ubicación del Archivo
+- Guardar en: `context/SPECs/SPEC-[nombre-feature].md`
+- Notificar a CRONISTA para actualizar `PROYECTO.md`
+
+### Paso 5: Validación
+Antes de entregar, verificar:
+- [ ] Todos los requisitos funcionales son verificables (tienen criterio de aceptación)
+- [ ] El plan de implementación tiene tareas concretas con estimaciones
+- [ ] Los riesgos tienen estrategia de mitigación
+- [ ] No hay dependencias circulares
+
+---
+
+## Plantilla
+
+```markdown
 # SPEC: [Nombre de la Funcionalidad]
 
 **ID:** ARCH-YYYYMMDD-NN  
@@ -35,9 +73,7 @@
 3. [Paso 3]
 
 ### 3.3 Arquitectura
-```
 [Diagrama ASCII o descripción de componentes]
-```
 
 ---
 
@@ -56,12 +92,7 @@
 ## 5. Diseño Técnico
 
 ### 5.1 Modelo de Datos
-```typescript
-interface NuevaEntidad {
-  id: string;
-  // ...
-}
-```
+[Interfaces, esquemas de DB, tipos]
 
 ### 5.2 Endpoints (si aplica)
 | Método | Ruta | Descripción |
@@ -95,26 +126,4 @@ interface NuevaEntidad {
 ## 7. Criterios de Aceptación
 - [ ] CA-01: [Criterio verificable]
 - [ ] CA-02: [Criterio verificable]
-
----
-
-## 8. Testing
-- [ ] Tests unitarios para [componente]
-- [ ] Test E2E para [flujo]
-
----
-
-## 9. Rollout
-- [ ] Feature flag: `FEATURE_NOMBRE_ENABLED`
-- [ ] Documentación actualizada
-- [ ] Comunicación a usuarios
-
----
-
-## 10. Referencias
-- [ADR relacionado](context/decisions/ADR-XXX.md)
-- [Documentación externa]
-
----
-
-*SPEC generado bajo Metodología INTEGRA v2.1.1*
+```

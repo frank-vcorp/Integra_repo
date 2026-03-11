@@ -177,7 +177,7 @@ runSubagent(
 
 La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metodologia/`.
 
-**REGLA OBLIGATORIA:** Antes de generar cualquier documento (SPEC, ADR, Dictamen, Handoff), busca y lee la plantilla correspondiente en:
+**Documentos de referencia:**
 
 | Documento | Ubicación |
 |-----------|-----------|
@@ -185,11 +185,20 @@ La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metod
 | SPEC de Código | `integra-metodologia/meta/SPEC-CODIGO.md` |
 | Sistema Handoff | `integra-metodologia/meta/sistema-handoff.md` |
 | Soft Gates | `integra-metodologia/meta/soft-gates.md` |
-| Plantilla SPEC | `integra-metodologia/meta/plantilla_SPEC.md` |
-| Plantilla ADR | `integra-metodologia/meta/plantillas/ADR.md` |
-| Plantilla Dictamen | `integra-metodologia/meta/plantillas/DICTAMEN.md` |
-| Plantilla Handoff | `integra-metodologia/meta/plantillas/HANDOFF_FEATURE.md` |
-| Plantilla Discovery | `integra-metodologia/meta/plantillas/DISCOVERY.md` |
+| Criterios de Calidad | `integra-metodologia/meta/criterios_calidad.md` |
+
+**Skills (se activan automáticamente al generar documentos):**
+
+| Skill | Ubicación | Cuándo se activa |
+|-------|-----------|------------------|
+| Generar SPEC | `integra-metodologia/skills/generar-spec/` | Al planificar una feature |
+| Generar ADR | `integra-metodologia/skills/generar-adr/` | Al documentar decisiones de arquitectura |
+| Generar Dictamen | `integra-metodologia/skills/generar-dictamen/` | Al analizar un bug o error |
+| Generar Discovery | `integra-metodologia/skills/generar-discovery/` | Al entrar a un proyecto nuevo |
+| Generar Micro-Sprint | `integra-metodologia/skills/generar-micro-sprint/` | Al iniciar una sesión de trabajo |
+| Generar Checkpoint | `integra-metodologia/skills/generar-checkpoint/` | Al completar una tarea o entrega |
+| Generar Handoff | `integra-metodologia/skills/generar-handoff/` | Al transferir trabajo entre agentes |
+| Generar Retro | `integra-metodologia/skills/generar-retro/` | Al cerrar un sprint |
 
 ---
 
@@ -521,7 +530,7 @@ Un **Checkpoint Enriquecido** va más allá del registro básico e incluye:
 6. **Soft Gates** - Estado de los 4 gates de calidad
 
 ### 12.5 Estructura del Checkpoint
-Ver plantilla completa en: `meta/plantilla_control.md`
+Ver skill completo en: `integra-metodologia/skills/generar-checkpoint/SKILL.md`
 
 ```markdown
 # Checkpoint: [Título]
