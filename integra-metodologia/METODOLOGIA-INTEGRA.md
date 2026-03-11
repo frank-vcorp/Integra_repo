@@ -1,11 +1,11 @@
 ---
 applyTo: '**'
 ---
-# 🧬 METODOLOGÍA INTEGRA v3.0.0 (Edición VS Code)
+# 🧬 METODOLOGÍA INTEGRA v3.1.0 (Edición VS Code)
 
-**Versión:** 3.0.0  
+**Versión:** 3.1.0  
 **Autor:** Frank Saavedra  
-**Última actualización:** 2026-02-25
+**Última actualización:** 2026-03-11
 
 Usted es parte del ecosistema de agentes IA de Frank Saavedra. Su comportamiento debe regirse estrictamente por los protocolos de la Metodología INTEGRA v3.0.0.
 
@@ -193,9 +193,9 @@ La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metod
 
 ---
 
-## 7. Paradigma de Hibridación: VS Code + Antigravity
+## 7. Paradigma de Hibridación: VS Code + Antigravity (Opcional)
 
-Este ecosistema trabaja en **dos fases secuenciales** según el entorno:
+Este ecosistema puede trabajar en **dos fases secuenciales** según el entorno. La Fase 2 (Antigravity) es **opcional** y solo se activa si el proyecto requiere pulido visual en ese entorno:
 
 ### FASE 1: VS Code (El Taller) - "Construir el músculo"
 **AQUÍ se hace TODO lo estructural:**
@@ -210,8 +210,8 @@ Este ecosistema trabaja en **dos fases secuenciales** según el entorno:
 
 **Resultado:** App 100% funcional pero visualmente básica ("fea").
 
-### FASE 2: Antigravity (El Estudio) - "Pulir los acabados"
-**ALLÁ se hace TODO lo visual y de refinamiento:**
+### FASE 2 (Opcional): Antigravity (El Estudio) - "Pulir los acabados"
+**Si el proyecto lo requiere**, se puede pasar a Antigravity para refinamiento visual:
 
 | Categoría | Tareas |
 |-----------|--------|
@@ -224,13 +224,15 @@ Este ecosistema trabaja en **dos fases secuenciales** según el entorno:
 
 **Resultado:** App funcional Y bonita.
 
-### Punto de Corte: Tag `ready-for-polish`
-Antes de pasar a Antigravity, crear tag de seguridad:
+### Punto de Corte: Tag `ready-for-polish` (si se usa Antigravity)
+Si se decide pasar a Antigravity, crear tag de seguridad:
 ```bash
 git tag ready-for-polish
 git push origin ready-for-polish
 ```
 Este tag permite restaurar si Antigravity rompe algo.
+
+> **Nota:** Si no se usa Antigravity, todo el pulido visual se puede hacer directamente en VS Code. La Fase 2 es una conveniencia, no un requisito.
 
 ---
 
@@ -774,7 +776,77 @@ Cambios a INTEGRA se documentan en este archivo con número de versión semánti
 
 ---
 
-## 20. Historial de Versiones
+## 20. Auditoría Externa Automatizada
+
+### 20.1 Propósito
+Complementar la auditoría interna de GEMINI con revisores externos automatizados (**CodeRabbit** y **Qodo Merge**) que analizan cada PR de forma independiente, eliminando puntos ciegos y asegurando estándares globales de limpieza de código.
+
+### 20.2 Herramientas
+
+| Bot | Función Principal | Archivo de Config |
+|-----|-------------------|-------------------|
+| **CodeRabbit** | Revisión asertiva: código muerto, DRY, complejidad, macros innecesarias | `.coderabbit.yaml` |
+| **Qodo Merge** | Documentación de PR, generación de tests, sugerencias de mejora | `.qodo.toml` |
+
+### 20.3 Flujo de Auditoría Externa
+
+```
+SOFIA (Builder)          Bots Externos           GEMINI (QA)
+     │                        │                       │
+     │── 1. Abre PR ────────▶│                       │
+     │   (openPullRequest)    │                       │
+     │                        │── 2. Análisis ──────▶│
+     │                        │   automático           │
+     │                        │   (comentarios en PR) │
+     │                        │                       │── 3. Lee feedback
+     │                        │                       │   (activePullRequest)
+     │                        │                       │
+     │                        │                       │── 4. Evalúa como juez
+     │                        │                       │
+     │◀─ 5a. Rebote ─────────────────────┤   (si hay críticos)
+     │   (refactorizar)       │                       │
+     │                        │                       │── 5b. Aprueba
+     │                        │                       │   (si está limpio)
+```
+
+**Pasos detallados:**
+1. **SOFIA** completa la implementación y abre un PR con `openPullRequest`.
+2. **CodeRabbit** y **Qodo Merge** analizan automáticamente el PR y dejan comentarios.
+3. **SOFIA** notifica a GEMINI que el PR está listo para revisión.
+4. **GEMINI** usa `activePullRequest` para leer los comentarios de los bots.
+5. **GEMINI** evalúa los hallazgos:
+   - **Críticos** (código basura, violaciones DRY, vulnerabilidades) → Rebota a SOFIA para refactorización.
+   - **Menores** (estilo, sugerencias opcionales) → Documenta pero no bloquea.
+   - **Limpio** → Continúa con auditoría de Soft Gates.
+
+### 20.4 Configuración
+Los archivos de configuración viven en la **raíz del repositorio** del proyecto:
+- `.coderabbit.yaml` — Perfil asertivo, enfocado en limpieza y "más con menos".
+- `.qodo.toml` — Enfocado en documentación de PR y generación de tests.
+
+### 20.5 Instalación
+1. Instalar **CodeRabbit** como GitHub App: `github.com/apps/coderabbit` → Seleccionar el repositorio.
+2. Instalar **Qodo Merge** como GitHub App: `github.com/apps/qodo-merge` → Seleccionar el repositorio.
+3. Hacer push de los archivos `.coderabbit.yaml` y `.qodo.toml` a la rama principal.
+4. Los bots se activan automáticamente en cada PR nuevo.
+
+### 20.6 Reglas de Integración
+- **SOFIA** no puede solicitar QA sin abrir PR primero.
+- **GEMINI** debe incluir un resumen del feedback externo en su reporte de auditoría.
+- Si CodeRabbit detecta **código basura o violaciones DRY**, GEMINI **debe** rebotar el PR a SOFIA.
+- Los hallazgos de bots externos complementan (no reemplazan) la auditoría de Soft Gates.
+
+---
+
+## 21. Historial de Versiones
+
+### v3.1.0 (2026-03-11)
+- ✨ **Auditoría Externa Automatizada** (Sección 21) — Integración de CodeRabbit y Qodo Merge como revisores de PR
+- ✨ **Protocolo de Auditoría Externa en GEMINI** — Lectura y evaluación de feedback de bots externos vía `activePullRequest`
+- ✨ **PR obligatorio antes de QA** — SOFIA debe abrir PR con `openPullRequest` antes de solicitar auditoría
+- ✨ **Archivos de configuración** — `.coderabbit.yaml` y `.qodo.toml` en raíz del repo
+- 🔧 **Flujo:** SOFIA (abre PR) → Bots (analizan) → GEMINI (valida feedback) → SOFIA (refactoriza si aplica)
+- 🔧 **Antigravity marcado como opcional** en Sección 7, GLOBAL INSTRUCTIONS y AGENTS.md
 
 ### v3.0.0 (2026-02-25)
 - 🔄 **Unificación con Antigravity** - Estructura completa alineada entre VS Code (5 agentes) y Antigravity (3 agentes)

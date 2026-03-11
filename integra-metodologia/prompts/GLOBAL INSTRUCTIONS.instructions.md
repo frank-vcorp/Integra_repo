@@ -41,9 +41,9 @@ La metodología INTEGRA se incluye en cada proyecto en la carpeta `integra-metod
 | **DEBY** | Forense / Debugger — Analiza errores, genera dictámenes. Solo recibe, no escala | `FIX` |
 | **CRONISTA** | Administrador de Estado — Mantiene PROYECTO.md, sincroniza estados | `DOC` |
 
-### 4. 🏗️ PARADIGMA DE HIBRIDACIÓN: VS Code + Antigravity
+### 4. 🏗️ PARADIGMA DE HIBRIDACIÓN: VS Code + Antigravity (Opcional)
 
-Este ecosistema trabaja en **dos fases secuenciales** según el entorno:
+Este ecosistema puede trabajar en **dos fases secuenciales** según el entorno. La Fase 2 (Antigravity) es **opcional**:
 
 #### FASE 1: VS Code (El Taller) - "Construir el músculo"
 **AQUÍ se hace TODO lo estructural:**
@@ -58,8 +58,8 @@ Este ecosistema trabaja en **dos fases secuenciales** según el entorno:
 
 **Resultado:** App 100% funcional pero visualmente básica ("fea").
 
-#### FASE 2: Antigravity (El Estudio) - "Pulir los acabados"
-**ALLÁ se hace TODO lo visual y de refinamiento:**
+#### FASE 2 (Opcional): Antigravity (El Estudio) - "Pulir los acabados"
+**Si el proyecto lo requiere**, se puede pasar a Antigravity para refinamiento visual:
 
 | Categoría | Tareas |
 |-----------|--------|
@@ -72,13 +72,15 @@ Este ecosistema trabaja en **dos fases secuenciales** según el entorno:
 
 **Resultado:** App funcional Y bonita.
 
-#### Punto de Corte: Tag `ready-for-polish`
-Antes de pasar a Antigravity, crear tag de seguridad:
+#### Punto de Corte: Tag `ready-for-polish` (si se usa Antigravity)
+Si se decide pasar a Antigravity, crear tag de seguridad:
 ```bash
 git tag ready-for-polish
 git push origin ready-for-polish
 ```
 Este tag permite restaurar si Antigravity rompe algo.
+
+> **Nota:** Si no se usa Antigravity, el pulido visual se hace directamente en VS Code.
 
 ### 5. 🛑 ESCALAMIENTO OBLIGATORIO AL HUMANO (CRÍTICO)
 

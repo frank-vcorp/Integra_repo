@@ -1,0 +1,37 @@
+# @intervention ARCH-20260311-01
+# Configuración de CodeRabbit para Metodología INTEGRA
+# Filosofía: "Más con menos" — código limpio, sin macros, sin basura.
+
+language: es
+reviews:
+  profile: assertive
+  path_instructions:
+    - path: "**/*.ts"
+      instructions: |
+        Revisar estrictamente:
+        - Código muerto o no utilizado
+        - Violaciones del principio DRY
+        - Funciones con más de 30 líneas (Principio del Cañón y la Mosca)
+        - console.log de debug olvidados
+        - Imports no utilizados
+        - Variables declaradas pero no usadas
+        - Macros o abstracciones innecesarias
+    - path: "**/*.tsx"
+      instructions: |
+        Revisar estrictamente:
+        - Componentes con más de 150 líneas (dividir)
+        - Props no tipadas o con `any`
+        - Lógica de negocio dentro de componentes UI (extraer a hooks/services)
+        - Código duplicado entre componentes
+    - path: "**/*.sql"
+      instructions: |
+        Revisar:
+        - Queries sin índices apropiados
+        - SELECT * en producción
+        - Inyección SQL potencial
+  auto_review:
+    enabled: true
+    drafts: false
+  collapse_walkthrough: false
+chat:
+  auto_reply: true

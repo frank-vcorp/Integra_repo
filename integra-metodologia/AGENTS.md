@@ -6,8 +6,8 @@
 
 | Entorno | Agentes | Razón |
 |---------|---------|-------|
-| **VS Code** | 5 (INTEGRA, SOFIA, GEMINI, DEBY, CRONISTA) | Más especialización: QA/Infra separado de Debugging, Estados separado de Arquitectura |
-| **Antigravity** | 3 (INTEGRA, SOFIA, DEBY) | DEBY absorbe QA+Infra, INTEGRA absorbe Estados+Diario |
+| **VS Code** | 5 (INTEGRA, SOFIA, GEMINI, DEBY, CRONISTA) | Entorno principal. Más especialización: QA/Infra separado de Debugging, Estados separado de Arquitectura |
+| **Antigravity** *(opcional)* | 3 (INTEGRA, SOFIA, DEBY) | Solo si se requiere pulido visual. DEBY absorbe QA+Infra, INTEGRA absorbe Estados+Diario |
 
 ### Agentes Disponibles
 

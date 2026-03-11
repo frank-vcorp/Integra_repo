@@ -1,0 +1,39 @@
+# @intervention ARCH-20260311-01
+# Configuración de Qodo Merge para Metodología INTEGRA
+# Enfoque: Documentación de PR y generación de tests.
+
+[pr_description]
+enable_pr_description = true
+generate_ai_title = true
+use_bullet_points = true
+extra_instructions = """
+Generar descripciones en español.
+Incluir: qué se cambió, por qué y qué archivos fueron afectados.
+Mencionar el ID de intervención INTEGRA si aparece en marcas de agua del código.
+"""
+
+[pr_reviewer]
+enable_review = true
+require_tests_review = true
+extra_instructions = """
+Revisar en español. Enfocarse en:
+- Tests faltantes para lógica de negocio
+- Violaciones de seguridad (OWASP Top 10)
+- Código duplicado o muerto
+- Validaciones ausentes en boundaries (inputs de usuario, APIs externas)
+"""
+
+[pr_test]
+enable_tests = true
+extra_instructions = """
+Generar tests en español (descripciones de test en español).
+Cubrir: casos edge, validaciones, y flujos de error.
+Seguir convenciones del proyecto (Vitest o Jest según el stack).
+"""
+
+[pr_improve]
+enable_improve = true
+extra_instructions = """
+Sugerencias en español.
+Priorizar: simplificación (Principio del Cañón y la Mosca), performance y legibilidad.
+"""
