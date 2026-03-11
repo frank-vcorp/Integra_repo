@@ -1,6 +1,6 @@
 #!/bin/bash
 # =============================================================================
-# Script de Inicialización de Proyecto con Metodología INTEGRA v2.1.1
+# Script de Inicialización de Proyecto con Metodología INTEGRA v3.1.0
 # =============================================================================
 # Uso: ./init-proyecto.sh /ruta/destino "NombreProyecto"
 # =============================================================================
@@ -24,7 +24,7 @@ DESTINO="$1"
 NOMBRE_PROYECTO="$2"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-echo -e "${GREEN}🧬 Inicializando proyecto con Metodología INTEGRA v2.1.1${NC}"
+echo -e "${GREEN}🧬 Inicializando proyecto con Metodología INTEGRA v3.1.0${NC}"
 echo "   Destino: $DESTINO"
 echo "   Proyecto: $NOMBRE_PROYECTO"
 echo ""
@@ -113,14 +113,67 @@ fi
 echo ""
 echo -e "${GREEN}✅ Proyecto inicializado exitosamente!${NC}"
 echo ""
+
+# Instalar prompts de agentes en VS Code
+echo -e "${YELLOW}🤖 Instalando prompts de agentes en VS Code...${NC}"
+
+# Detectar ruta de prompts según entorno
+if [ -n "$CODESPACES" ] || [ -n "$CLOUDENV_ENVIRONMENT_ID" ]; then
+    # GitHub Codespaces / Cloud environment
+    PROMPTS_DIR="$HOME/.config/Code/User/prompts"
+    echo "   Entorno detectado: Codespaces"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    # macOS
+    PROMPTS_DIR="$HOME/Library/Application Support/Code/User/prompts"
+    echo "   Entorno detectado: macOS"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    # Linux
+    PROMPTS_DIR="$HOME/.config/Code/User/prompts"
+    echo "   Entorno detectado: Linux"
+elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
+    # Windows (Git Bash / Cygwin)
+    PROMPTS_DIR="$APPDATA/Code/User/prompts"
+    echo "   Entorno detectado: Windows"
+else
+    PROMPTS_DIR=""
+    echo -e "${RED}   ⚠ No se pudo detectar el SO. Instala los prompts manualmente.${NC}"
+fi
+
+if [ -n "$PROMPTS_DIR" ]; then
+    mkdir -p "$PROMPTS_DIR"
+    PROMPTS_SRC="$SCRIPT_DIR/prompts"
+    if [ -d "$PROMPTS_SRC" ]; then
+        UPDATED=0
+        INSTALLED=0
+        for f in "$PROMPTS_SRC"/*.md; do
+            fname=$(basename "$f")
+            if [ -f "$PROMPTS_DIR/$fname" ]; then
+                if ! diff -q "$f" "$PROMPTS_DIR/$fname" > /dev/null 2>&1; then
+                    cp "$f" "$PROMPTS_DIR/$fname"
+                    echo -e "   ${YELLOW}↻ Actualizado:${NC} $fname"
+                    UPDATED=$((UPDATED + 1))
+                fi
+            else
+                cp "$f" "$PROMPTS_DIR/$fname"
+                echo -e "   ${GREEN}+ Instalado:${NC} $fname"
+                INSTALLED=$((INSTALLED + 1))
+            fi
+        done
+        if [ $UPDATED -eq 0 ] && [ $INSTALLED -eq 0 ]; then
+            echo -e "   ${GREEN}✓ Prompts ya están actualizados${NC}"
+        else
+            echo -e "   ${GREEN}✓ $INSTALLED instalados, $UPDATED actualizados${NC}"
+        fi
+    else
+        echo -e "${RED}   ⚠ No se encontró carpeta prompts/ en $PROMPTS_SRC${NC}"
+    fi
+fi
+
+echo ""
 echo "Próximos pasos:"
 echo "  1. cd $DESTINO"
 echo "  2. git init (si es nuevo)"
-echo "  3. Instala los prompts en VS Code:"
-echo "     - Abre VS Code"
-echo "     - Ctrl+Shift+P → 'Preferences: Open User Prompts Folder'"
-echo "     - Copia los archivos de 'prompts/' a esa carpeta"
-echo "  4. Edita PROYECTO.md con tus tareas iniciales"
-echo "  5. Edita context/dossier_tecnico.md con los detalles de tu stack"
+echo "  3. Edita PROYECTO.md con tus tareas iniciales"
+echo "  4. Edita context/dossier_tecnico.md con los detalles de tu stack"
 echo ""
 echo -e "${GREEN}¡Listo para desarrollar con INTEGRA! 🚀${NC}"
