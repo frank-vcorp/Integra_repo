@@ -341,11 +341,13 @@ export async function checkInAppointment(appointmentId: string) {
         },
       })
 
+      // FIX-20260313-02: Validar obligatoriedad de ServiceProfile para evitar MedicalEvents fantasma
+      if (!existingAppointment.serviceProfile) {
+        throw new Error('No se puede hacer Check-in: la cita no tiene un perfil clínico (serviceProfileId) asignado.')
+      }
+
       // IMPL-20260313-04: Instanciar pruebas del perfil médico como EventTest (PENDING)
-      if (
-        existingAppointment.serviceProfile &&
-        existingAppointment.serviceProfile.tests.length > 0
-      ) {
+      if (existingAppointment.serviceProfile.tests.length > 0) {
         const eventTestsData = existingAppointment.serviceProfile.tests.map((pt) => ({
           eventId: newMedicalEvent.id,
           testId: pt.test.id,
@@ -356,12 +358,21 @@ export async function checkInAppointment(appointmentId: string) {
       }
 
       // 4. Registrar en auditoría DENTRO de la transacción (Critical Path)
-      // Si falla la auditoría, se revierte todo el Check-in por seguridad/compliance.
-      await logAudit('CHECK_IN', 'Appointment', appointmentId, {
-        medicalEventId: newMedicalEvent.id,
-        workerId: newMedicalEvent.workerId,
-        branchId: newMedicalEvent.branchId,
-        timestamp: new Date().toISOString()
+      // FIX-20260313-02: Garantizar atomidad ACID reemplazando `logAudit` (que engullía errores) 
+      // por una inserción manual transaccional `tx.auditLog.create`
+      await tx.auditLog.create({
+        data: {
+          action: 'CHECK_IN',
+          entity: 'Appointment',
+          entityId: appointmentId,
+          userId: session.user.id,
+          details: {
+            medicalEventId: newMedicalEvent.id,
+            workerId: newMedicalEvent.workerId,
+            branchId: newMedicalEvent.branchId,
+            timestamp: new Date().toISOString()
+          }
+        }
       })
 
       return { appointment: updatedAppointment, medicalEvent: newMedicalEvent }
