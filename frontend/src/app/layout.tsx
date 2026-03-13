@@ -36,6 +36,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <NavItem href="/branches" icon="🏥" label="Sucursales AMI" />
               <NavItem href="/admin/users" icon="👨‍⚕️" label="Personal AMI" />
               <NavItem href="/admin/clinical-catalog" icon="🔬" label="Catálogo Clínico" />
+              <NavItem href="/admin/medical-profiles" icon="📦" label="Perfiles Médicos" />
               <NavItem href="/admin/services" icon="🩺" label="Catálogo Servicios" />
               <NavItem href="/admin/profiles" icon="📦" label="Baterías (Paquetes)" />
               <NavItem href="/admin/audit" icon="📋" label="Bitácora de Auditoría" />
