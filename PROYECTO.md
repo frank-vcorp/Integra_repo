@@ -1,6 +1,6 @@
 # PROYECTO: Residente Digital
 
-**Estado:** [✓] COMPLETADO: Catálogo Clínico y Perfiles B2B
+**Estado:** [~] EN PROGRESO: Catálogo Clínico y Perfiles B2B
 **Fase:** Fase 2 Operativa: MOD-CITAS (Gestión de Agenda) | MOD-DASHBOARD (KPIs) | MOD-BITACORA (Auditoría)
 **ID Actual:** ARCH-20260313-01 (Refactor de Estudios Clínicos)
 **Último Sprint Completado:** DOC-20260227-01 (Sprint Citas/Piso Clínico - Validado)
@@ -49,15 +49,6 @@ Sistema de Administración Médica Industrial (AMI) para gestión de empresas, t
     - Implementación de Integridad Referencial: Empresa -> Sucursal -> Trabajador -> Evento.
     - "Caso Francisco Saavedra": Demostración E2E de creación de cliente, trabajador y operación médica.
     - Integración WhatsApp Dinámica: Generación de enlaces `wa.me` personalizados con teléfono del trabajador para entrega de resultados.
-
-## Estado Actual
-
-- **Último avance validado:** Flujo Empresa → Trabajador filtrado, corrección clínica a `Sala y Somatometría` y `Agudeza Visual` en enfermería.
-- **Micro-Sprint actual planificado:** `ARCH-20260318-07` — Recepción Operativa y Agenda Multi-Sucursal.
-- **Objetivo inmediato:** Multi-sucursal por empresa, detección de duplicados, corroboración de datos al llegar y pantalla independiente de 3 agendas.
-- **Siguiente validación funcional:** Prueba operativa completa desde alta/duplicado de trabajador hasta check-in con corroboración y monitoreo cross-sucursal.
-
-**Estado:** [~] EN PROGRESO: Alineación operativa AMI con notas de Lety.
 
 
 

@@ -1,6 +1,5 @@
 export const dynamic = 'force-dynamic'
 
-import Link from 'next/link'
 import { getCompanies } from "@/actions/admin.actions"
 import CompanyFormModal from "@/components/CompanyFormModal"
 
@@ -27,7 +26,6 @@ export default async function CompaniesPage() {
                 {companies.map(c => (
                     <CompanyCard
                         key={c.id}
-                        id={c.id}
                         name={c.name}
                         rfc={c.rfc || 'Sin RFC'}
                         contact={c.contactName || '---'}
@@ -40,7 +38,7 @@ export default async function CompaniesPage() {
     )
 }
 
-function CompanyCard({ id, name, rfc, contact, email, defaultBranch }: { id: string, name: string, rfc: string, contact: string, email: string | null, defaultBranch?: string }) {
+function CompanyCard({ name, rfc, contact, email, defaultBranch }: { name: string, rfc: string, contact: string, email: string | null, defaultBranch?: string }) {
     return (
         <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all group">
             <div className="flex justify-between items-start mb-4">
@@ -76,12 +74,9 @@ function CompanyCard({ id, name, rfc, contact, email, defaultBranch }: { id: str
                 <button className="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-600 py-1.5 rounded text-xs font-medium transition-colors">
                     Editar
                 </button>
-                <Link
-                    href={`/companies/${id}`}
-                    className="flex-1 text-center bg-slate-900 hover:bg-slate-800 text-white py-1.5 rounded text-xs font-medium transition-colors"
-                >
-                    Puestos de Trabajo
-                </Link>
+                <button className="flex-1 bg-slate-50 hover:bg-slate-100 text-slate-600 py-1.5 rounded text-xs font-medium transition-colors">
+                    Convenios
+                </button>
             </div>
         </div>
     )

@@ -37,10 +37,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <NavItem href="/admin/users" icon="👨‍⚕️" label="Personal AMI" />
               <NavItem href="/admin/clinical-catalog" icon="🔬" label="Catálogo Clínico" />
               <NavItem href="/admin/medical-profiles" icon="📦" label="Perfiles Médicos" />
-              {/* LEGACY DEPRECATED (Fase 1): 
-                <NavItem href="/admin/services" icon="🩺" label="Catálogo Servicios" />
-                <NavItem href="/admin/profiles" icon="📦" label="Baterías (Paquetes)" />
-              */}
+              <NavItem href="/admin/services" icon="🩺" label="Catálogo Servicios" />
+              <NavItem href="/admin/profiles" icon="📦" label="Baterías (Paquetes)" />
               <NavItem href="/admin/audit" icon="📋" label="Bitácora de Auditoría" />
               <NavItem href="/companies" icon="🏢" label="Empresas Cliente" />
 
@@ -60,14 +58,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <div className="w-8 h-8 rounded-full bg-slate-200 border border-slate-300"></div>
               </div>
             </header>
-            <div className="md:hidden bg-white border-b border-slate-200 px-4 py-3">
-              <div className="flex gap-2 overflow-x-auto">
-                <MobileNavItem href="/appointments" icon="📅" label="Citas" />
-                <MobileNavItem href="/reception" icon="🏥" label="Piso" />
-                <MobileNavItem href="/events" icon="📁" label="Expedientes" />
-                <MobileNavItem href="/workers" icon="👥" label="Trabajadores" />
-              </div>
-            </div>
             <div className="p-8">
               {children}
             </div>
@@ -87,18 +77,6 @@ function NavItem({ href, icon, label }: { href: string, icon: string, label: str
     >
       <span>{icon}</span>
       <span className="font-medium">{label}</span>
-    </Link>
-  )
-}
-
-function MobileNavItem({ href, icon, label }: { href: string, icon: string, label: string }) {
-  return (
-    <Link
-      href={href}
-      className="flex items-center gap-2 whitespace-nowrap rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-100 transition-colors"
-    >
-      <span>{icon}</span>
-      <span>{label}</span>
     </Link>
   )
 }

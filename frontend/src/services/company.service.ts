@@ -10,10 +10,7 @@ export const getCompanies = async () => {
 export const getCompanyById = async (id: string) => {
     return await prisma.company.findUnique({
         where: { id },
-        include: {
-            workers: true,
-            allowedBranches: { select: { id: true, name: true } },
-        }
+        include: { workers: true }
     })
 }
 
