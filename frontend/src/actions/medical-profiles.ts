@@ -57,6 +57,19 @@ function parseTestIds(formData: FormData): string[] {
 // QUERIES
 // ─────────────────────────────────────────────────────────────────────────────
 
+export async function getMedicalProfilesForCompany(companyId: string) {
+  return await prisma.medicalProfile.findMany({
+    where: {
+      OR: [
+        { companyId },
+        { companyId: null },
+      ],
+    },
+    select: { id: true, name: true, companyId: true },
+    orderBy: { name: 'asc' },
+  })
+}
+
 export async function getMedicalProfiles() {
   return await prisma.medicalProfile.findMany({
     include: {

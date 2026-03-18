@@ -35,6 +35,7 @@ export async function createAppointment(data: {
   scheduledAt: Date | string
   notes?: string
   source?: string
+  serviceProfileId?: string | null
 }) {
   try {
     const session = await getServerSession(authOptions)
@@ -79,7 +80,8 @@ export async function createAppointment(data: {
         source: data.source || 'SUCURSAL',
         status: 'SCHEDULED',
         expedientId,
-        qrCode
+        qrCode,
+        serviceProfileId: data.serviceProfileId || null,
       },
       include: {
         worker: {
@@ -288,7 +290,7 @@ export async function checkInAppointment(appointmentId: string) {
           worker: true,
           company: true,
           branch: true,
-          medicalEvents: true, // Relacion es array aunque sea 1:1 logicamente
+          medicalEvents: true, // Relacion es 1:1 opcional (MedicalEvent?)
           // IMPL-20260313-04: Cargar perfil con sus pruebas para instanciar EventTests
           serviceProfile: {
             include: {
@@ -306,7 +308,7 @@ export async function checkInAppointment(appointmentId: string) {
         throw new Error('Cita no encontrada')
       }
 
-      if (existingAppointment.medicalEvents && existingAppointment.medicalEvents.length > 0) {
+      if (existingAppointment.medicalEvents) {
         throw new Error('Esta cita ya tiene un evento médico asociado')
       }
 
@@ -483,3 +485,88 @@ export async function processQRCheckIn(qrContent: string) {
     return { success: false, error: 'Error interno al procesar QR.' }
   }
 }
+
+/**
+ * Obtiene los datos necesarios para el paso de corroboración previo al check-in.
+ * Devuelve datos del trabajador y la cita sin alterar ningún estado.
+ * @id IMPL-20260318-08
+ */
+export async function getAppointmentForCorroboration(appointmentId: string) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user) {
+      return { success: false, error: 'No autenticado' }
+    }
+
+    const appointment = await prisma.appointment.findUnique({
+      where: { id: appointmentId },
+      select: {
+        id: true,
+        status: true,
+        scheduledAt: true,
+        expedientId: true,
+        worker: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            universalId: true,
+            phone: true,
+            email: true,
+            dob: true,
+            companyId: true,
+            jobPositionId: true,
+            company: { select: { id: true, name: true } },
+            jobPosition: { select: { id: true, name: true } },
+          }
+        },
+        company: { select: { id: true, name: true } },
+        branch: { select: { id: true, name: true } },
+      }
+    })
+
+    if (!appointment) {
+      return { success: false, error: 'Cita no encontrada' }
+    }
+
+    return { success: true, appointment }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Error' }
+  }
+}
+
+/**
+ * Obtiene todas las citas del día para todas las sucursales (vista de monitoreo multi-sucursal).
+ * @id IMPL-20260318-08
+ */
+export async function getAppointmentsForOverview(date: string) {
+  try {
+    const session = await getServerSession(authOptions)
+    if (!session?.user) {
+      return { success: false, error: 'No autenticado' }
+    }
+
+    const targetDate = new Date(`${date}T12:00:00.000Z`)
+    const startRange = new Date(targetDate)
+    startRange.setDate(startRange.getDate() - 1)
+    const endRange = new Date(targetDate)
+    endRange.setDate(endRange.getDate() + 1)
+
+    const appointments = await prisma.appointment.findMany({
+      where: {
+        scheduledAt: { gte: startRange, lte: endRange },
+      },
+      include: {
+        worker: { select: { firstName: true, lastName: true } },
+        company: { select: { name: true } },
+        branch: { select: { id: true, name: true, hourlyCapacity: true, openingTime: true, closingTime: true } },
+      },
+      orderBy: { scheduledAt: 'asc' },
+    })
+
+    return { success: true, appointments }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : 'Error' }
+  }
+}
+
