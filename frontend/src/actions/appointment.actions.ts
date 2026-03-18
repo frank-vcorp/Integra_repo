@@ -281,39 +281,77 @@ export async function checkInAppointment(appointmentId: string) {
       throw new Error('Usuario no autenticado')
     }
 
-    // Fix: Uso de transacción para garantizar atomicidad (Cita COMPLETADA + Evento Creado + Auditoría)
-    const result = await prisma.$transaction(async (tx) => {
-      // 1. Obtener la cita y verificar estado
-      const existingAppointment = await tx.appointment.findUnique({
-        where: { id: appointmentId },
-        include: {
-          worker: true,
-          company: true,
-          branch: true,
-          medicalEvents: true, // Relacion es 1:1 opcional (MedicalEvent?)
-          // IMPL-20260313-04: Cargar perfil con sus pruebas para instanciar EventTests
-          serviceProfile: {
-            include: {
-              tests: {
-                include: {
-                  test: { select: { id: true, name: true } },
-                },
+    /**
+     * FIX-20260318-01
+     * @see context/checkpoints/CHK_ARCH-20260318-09-VALIDACION-FINAL.md
+     * Cargamos el perfil y sus pruebas fuera de la transacción para reducir el tiempo
+     * del bloque interactivo y evitar expiraciones al instanciar EventTests.
+     */
+    const appointmentSnapshot = await prisma.appointment.findUnique({
+      where: { id: appointmentId },
+      include: {
+        worker: true,
+        company: true,
+        branch: true,
+        medicalEvents: true,
+        serviceProfile: {
+          include: {
+            tests: {
+              include: {
+                test: { select: { id: true, name: true } },
               },
             },
           },
         },
+      },
+    })
+
+    if (!appointmentSnapshot) {
+      throw new Error('Cita no encontrada')
+    }
+
+    if (appointmentSnapshot.medicalEvents) {
+      throw new Error('Esta cita ya tiene un evento médico asociado')
+    }
+
+    if (appointmentSnapshot.status === 'COMPLETED' || appointmentSnapshot.status === 'CANCELLED') {
+      throw new Error(`La cita ya está en estado ${appointmentSnapshot.status}`)
+    }
+
+    if (!appointmentSnapshot.serviceProfile) {
+      throw new Error('No se puede hacer Check-in: la cita no tiene un perfil clínico (serviceProfileId) asignado.')
+    }
+
+    const eventTestsData = appointmentSnapshot.serviceProfile.tests.map((profileTest) => ({
+      testId: profileTest.test.id,
+      testNameSnapshot: profileTest.test.name,
+      status: 'PENDING' as const,
+    }))
+
+    // Fix: Uso de transacción para garantizar atomicidad (Cita COMPLETADA + Evento Creado + Auditoría)
+    const result = await prisma.$transaction(async (tx) => {
+      const currentAppointment = await tx.appointment.findUnique({
+        where: { id: appointmentId },
+        select: {
+          id: true,
+          status: true,
+          workerId: true,
+          branchId: true,
+          companyId: true,
+          medicalEvents: { select: { id: true } },
+        },
       })
 
-      if (!existingAppointment) {
+      if (!currentAppointment) {
         throw new Error('Cita no encontrada')
       }
 
-      if (existingAppointment.medicalEvents) {
+      if (currentAppointment.medicalEvents) {
         throw new Error('Esta cita ya tiene un evento médico asociado')
       }
 
-      if (existingAppointment.status === 'COMPLETED' || existingAppointment.status === 'CANCELLED') {
-        throw new Error(`La cita ya está en estado ${existingAppointment.status}`)
+      if (currentAppointment.status === 'COMPLETED' || currentAppointment.status === 'CANCELLED') {
+        throw new Error(`La cita ya está en estado ${currentAppointment.status}`)
       }
 
       // 2. Actualizar estado de Cita a COMPLETED
@@ -325,13 +363,13 @@ export async function checkInAppointment(appointmentId: string) {
       // 3. Crear MedicalEvent vinculado
       const newMedicalEvent = await tx.medicalEvent.create({
         data: {
-          workerId: existingAppointment.workerId,
-          branchId: existingAppointment.branchId,
+          workerId: currentAppointment.workerId,
+          branchId: currentAppointment.branchId,
           status: 'CHECKED_IN',
           checkInDate: new Date(),
           appointmentId: appointmentId, // Usar ID directo si el connect falla, es más seguro y simple
           // IMPL-20260313-04: Ligar empresa facturadora desde la cita
-          billingCompanyId: existingAppointment.companyId || null,
+          billingCompanyId: currentAppointment.companyId || null,
         },
         include: {
           worker: {
@@ -343,20 +381,14 @@ export async function checkInAppointment(appointmentId: string) {
         },
       })
 
-      // FIX-20260313-02: Validar obligatoriedad de ServiceProfile para evitar MedicalEvents fantasma
-      if (!existingAppointment.serviceProfile) {
-        throw new Error('No se puede hacer Check-in: la cita no tiene un perfil clínico (serviceProfileId) asignado.')
-      }
-
       // IMPL-20260313-04: Instanciar pruebas del perfil médico como EventTest (PENDING)
-      if (existingAppointment.serviceProfile.tests.length > 0) {
-        const eventTestsData = existingAppointment.serviceProfile.tests.map((pt) => ({
-          eventId: newMedicalEvent.id,
-          testId: pt.test.id,
-          testNameSnapshot: pt.test.name,
-          status: 'PENDING' as const,
-        }))
-        await tx.eventTest.createMany({ data: eventTestsData })
+      if (eventTestsData.length > 0) {
+        await tx.eventTest.createMany({
+          data: eventTestsData.map((eventTest) => ({
+            eventId: newMedicalEvent.id,
+            ...eventTest,
+          })),
+        })
       }
 
       // 4. Registrar en auditoría DENTRO de la transacción (Critical Path)
@@ -378,6 +410,9 @@ export async function checkInAppointment(appointmentId: string) {
       })
 
       return { appointment: updatedAppointment, medicalEvent: newMedicalEvent }
+    }, {
+      maxWait: 10000,
+      timeout: 15000,
     })
 
     // Comentamos la auditoría externa antigua
