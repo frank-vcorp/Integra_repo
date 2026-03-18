@@ -34,7 +34,7 @@ INTEGRA soluciona esto con **roles, reglas y trazabilidad**. Cada agente tiene u
 
 | Agente | Rol | Qué hace | Modelo sugerido |
 |--------|-----|----------|-----------------|
-| **INTEGRA** | Arquitecto / PO | Planifica, prioriza, decide qué construir | Gemini 3.1 Pro |
+| **INTEGRA** | Arquitecto / PO | Planifica, prioriza, decide qué construir | GPT-5.4 |
 | **SOFIA** | Builder | Escribe código, tests, implementa features | Claude Sonnet 4.6 |
 | **GEMINI** | QA / Infra | Revisa código, configura hosting, audita | Gemini 2.5 Pro |
 | **DEBY** | Debugger Forense | Analiza bugs complejos, genera dictámenes | Claude Opus 4.6 |
@@ -205,10 +205,60 @@ integra-metodologia/
 
 ---
 
+## 🪝 Agent Hooks (VS Code 1.111+)
+
+INTEGRA incluye hooks automáticos que se ejecutan en puntos clave del ciclo de vida de cada agente. Los hooks son scripts de shell que devuelven JSON para inyectar contexto o controlar el comportamiento.
+
+### Hooks incluidos
+
+| Hook | Agente(s) | Qué hace |
+|------|-----------|----------|
+| `SessionStart` | Todos | Inyecta contexto del proyecto: rama, estado del backlog, interconsultas pendientes, stack |
+| `Stop` | SOFIA | Bloquea cierre hasta validar los 4 Soft Gates (compilación, tests, revisión, docs) |
+| `Stop` | Deby | Bloquea cierre si no se generó el dictamen obligatorio |
+
+### Activación
+
+1. Habilitar en VS Code: `chat.useCustomAgentHooks: true`
+2. Los scripts se instalan automáticamente en `~/.integra/hooks/` al ejecutar `sync-prompts.sh`
+3. Funcionan globalmente — en todos los proyectos, incluidas conexiones SSH
+
+### Diagnóstico
+- Output → "GitHub Copilot Chat Hooks" para ver logs de ejecución
+- `#debugEventsSnapshot` como contexto en chat para diagnóstico avanzado
+
+---
+
+## 🤖 Modo Autopilot (VS Code 1.111+)
+
+Autopilot permite que SOFIA trabaje de forma completamente autónoma — ideal para implementar SPECs mientras duermes.
+
+### Requisitos para Autopilot seguro
+- SPEC con campos completos (criterios de aceptación, rutas, tipos definidos)
+- Scope acotado (≤ 7 archivos afectados)
+- Branch dedicado (`feat/[spec-id]`)
+- Sin dependencias externas nuevas
+- Hook `Stop` de SOFIA activo (valida Soft Gates automáticamente)
+
+### Flujo "Dormir tranquilo"
+```
+1. INTEGRA genera SPEC detallada → humano aprueba
+2. git checkout -b feat/spec-id
+3. Seleccionar SOFIA como agente → Permiso: Autopilot
+4. Prompt: "Implementa la SPEC [ruta]. Al terminar, genera checkpoint."
+5. SOFIA trabaja autónomamente con Soft Gates forzados por hook
+6. Al despertar: revisar checkpoint y diff del branch
+```
+
+Ver detalles completos en la sección 15 de GLOBAL INSTRUCTIONS.
+
+---
+
 ## 🔄 Versiones
 
 | Versión | Fecha | Qué cambió |
 |---------|-------|------------|
+| **v3.2.0** | 2026-03-17 | Agent Hooks (VS Code 1.111), Protocolo Autopilot, Debug Events Snapshot |
 | **v3.1.0** | 2026-03-11 | Auditoría externa (CodeRabbit + Qodo Merge), Skills/Instructions nativas, `copilot-instructions.md` |
 | **v3.0.0** | 2026-02-25 | Micro-Sprints, Checkpoints, Discovery, Deuda Técnica, Rollback |
 | **v2.5.1** | 2026-02-03 | Qodo CLI como segunda opinión |

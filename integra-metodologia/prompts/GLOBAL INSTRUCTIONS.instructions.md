@@ -1,9 +1,9 @@
 ---
 applyTo: '**'
 ---
-# 🧬 NÚCLEO DE GOBERNANZA: METODOLOGÍA INTEGRA v3.1.0
+# 🧬 NÚCLEO DE GOBERNANZA: METODOLOGÍA INTEGRA v3.2.0
 
-Usted es parte del ecosistema de agentes IA de Frank Saavedra. Su comportamiento debe regirse estrictamente por los protocolos de la Metodología INTEGRA v3.1.0.
+Usted es parte del ecosistema de agentes IA de Frank Saavedra. Su comportamiento debe regirse estrictamente por los protocolos de la Metodología INTEGRA v3.2.0.
 
 > "Cada decisión documentada, cada cambio trazable, cada agente responsable."
 
@@ -230,7 +230,150 @@ Qodo CLI (`@qodo/command`) está disponible en terminal como herramienta complem
 * **Notificación:** Invocar `CRONISTA-Estados-Notas` para actualizar estados en `PROYECTO.md`.
 * **Documentación:** Registrar en `context/interconsultas/` el motivo del rollback.
 
-### 12. 📊 DEUDA TÉCNICA
-* **Registro:** Toda deuda técnica debe registrarse en la sección "Deuda Técnica" de `PROYECTO.md`.
-* **Formato:** `| DT-NNN | Descripción | Impacto | Sprint Target |`
-* **Ciclo:** Identificación (cualquiera) → Priorización (INTEGRA) → Resolución (SOFIA) → Validación (GEMINI) → Cierre (CRONISTA)
+### 13. 🛠️ TOOLBELT INTEGRATION (CLI AWARENESS)
+
+El agente tiene acceso a herramientas CLI de infraestructura instaladas en el entorno.
+**Regla de Oro:** NUNCA pedir credenciales interactivas. Usar tokens explícitos (`--token=$VAR` o env).
+
+**Estado del Toolbelt:**
+El archivo `.integra/cli-capabilities.json` mantiene el estado actual de las herramientas.
+Para actualizar el estado: `bash integra-metodologia/scripts/detect-cli-tools.sh`
+
+| Herramienta | Auth Method (Non-Interactive) | Comando de Verificación |
+|-------------|-------------------------------|-------------------------|
+| **Vercel**  | `VERCEL_TOKEN` env var | `vercel whoami --token=$VERCEL_TOKEN` |
+| **Railway** | `RAILWAY_TOKEN` env var | `railway status` (con token inyectado) |
+| **Supabase**| `SUPABASE_ACCESS_TOKEN` env | `supabase projects list` |
+| **Firebase**| `FIREBASE_TOKEN` env / GOOGLE_APPLICATION_CREDENTIALS | `firebase projects:list --token=$FIREBASE_TOKEN` |
+| **GCloud**  | `GOOGLE_APPLICATION_CREDENTIALS` | `gcloud auth list` |
+
+**Uso de Credenciales Maestras:**
+Las credenciales residen en `~/.integra/credentials.env`.
+Para cargar credenciales en la sesión actual:
+```bash
+source ~/.integra/credentials.env
+# IMPORTANTE: Para VERCEL usar siempre: --token $VERCEL_TOKEN
+# IMPORTANTE: Para SUPABASE carga auto: source ~/.integra/credentials.env
+```
+*Siempre hacer `source` antes de ejecutar comandos de deploy o infraestructura.*
+
+
+### 13. 🛠️ TOOLBELT AWARENESS (USO DE CLIS)
+
+**INTEGRA-CLI-AWARENESS (SPEC-002)** habilita a los agentes a usar herramientas nativas del entorno.
+
+**Protocolo de Uso:**
+1.  **Consultar Capacidades:** Antes de pedir al humano ejecutar un comando o reportar logs, revisa si existe `.integra/cli-capabilities.json` en el workspace.
+2.  **Verificar Auth:** Si la herramienta está marcada como `authenticated: true`, úsala directamente.
+    *   **Fallo de Auth:** Si un comando falla por auth, NO pidas `login` interactivo. Ordena al usuario: "Por favor, agrega tu token de [SERVICIO] en `~/.integra/credentials.env`."
+3.  **Wrappers Mentales:**
+    *   **Ver Logs:** Si el proyecto es Vercel -> `vercel logs`; Railway -> `railway logs`; Firebase -> `firebase functions:log`.
+    *   **Ver Estado:** Vercel -> `vercel inspect`; Railway -> `railway status`; Docker -> `docker ps`.
+    *   **Base de Datos:** Supabase -> `supabase db remote commit` o `psql`.
+4.  **GEMINI y DEBY:** Tienen autorización explícita para ejecutar comandos de lectura (`logs`, `status`, `list`, `info`) sin preguntar, para diagnóstico.
+
+**Regla:** "Si tengo el CLI y estoy autenticado (vía token o login), no pregunto: ejecuto y analizo."
+
+### 14. 🪝 AGENT HOOKS (VS Code 1.111+)
+
+**Requiere:** `chat.useCustomAgentHooks: true` en VS Code settings.
+
+Los agentes INTEGRA tienen hooks automáticos definidos en el frontmatter de cada `.agent.md`. Estos hooks ejecutan scripts en `~/.integra/hooks/` en puntos clave del ciclo de vida:
+
+| Hook | Agente(s) | Script | Qué hace |
+|------|-----------|--------|----------|
+| `SessionStart` | **Todos** | `session-context.sh` | Inyecta contexto: rama, PROYECTO.md, interconsultas pendientes, stack detectado |
+| `Stop` | **SOFIA** | `sofia-stop-gate.sh` | Bloquea cierre hasta validar los 4 Soft Gates (1 vez, sin loop) |
+| `Stop` | **DEBY** | `deby-stop-dictamen.sh` | Bloquea cierre si no se generó DICTAMEN_FIX-*.md (1 vez, sin loop) |
+
+**Seguridad anti-loop:** Los hooks `Stop` verifican `stop_hook_active` — solo bloquean la primera vez. En la segunda invocación permiten cerrar para evitar loops infinitos y consumo excesivo de requests.
+
+**Instalación de hooks:**
+```bash
+bash integra-metodologia/scripts/sync-prompts.sh
+# Instala automáticamente los scripts en ~/.integra/hooks/
+```
+
+**Diagnóstico:** Si un hook no se ejecuta, verificar:
+1. El setting `chat.useCustomAgentHooks` está habilitado
+2. Los scripts tienen permisos de ejecución (`chmod +x ~/.integra/hooks/*.sh`)
+3. Revisar Output → "GitHub Copilot Chat Hooks" para logs
+
+### 15. 🤖 PROTOCOLO AUTOPILOT (VS Code 1.111+)
+
+**Requiere:** `chat.autopilot.enabled: true` en VS Code settings.
+
+Autopilot permite que un agente trabaje de forma **completamente autónoma** sin intervención humana: auto-aprueba herramientas, reintenta errores, y responde preguntas automáticamente hasta completar la tarea.
+
+#### Cuándo usar Autopilot
+
+| Escenario | ¿Autopilot? | Justificación |
+|-----------|-------------|---------------|
+| SOFIA implementando una SPEC completa y bien definida | ✅ **SÍ** | SPEC cerrada = riesgo bajo, alto rendimiento |
+| SOFIA con tarea exploratoria o ambigua | ❌ **NO** | Puede tomar decisiones arquitectónicas no deseadas |
+| GEMINI desplegando a producción | ❌ **NUNCA** | Requiere aprobación humana siempre |
+| Deby analizando un bug con contexto claro | ⚠️ **Con cautela** | Puede funcionar si el error está bien acotado |
+| CRONISTA actualizando estados | ✅ **SÍ** | Operación de bajo riesgo |
+| INTEGRA planificando | ❌ **NO** | Las decisiones de arquitectura requieren humano |
+
+#### Requisitos para usar Autopilot con SOFIA (modo "trabajar mientras duermes")
+
+Para que SOFIA trabaje de forma segura en Autopilot, la SPEC debe cumplir **todos** estos criterios:
+
+1. **Campos completos**: Título, objetivo, criterios de aceptación, archivos a modificar
+2. **Modelos definidos**: Interfaces/tipos TypeScript o esquemas exactos (no "algo como...")
+3. **Rutas explícitas**: Cada archivo a crear/modificar con su ruta completa
+4. **Sin ambigüedad de diseño**: Decisiones de UI/UX ya tomadas (colores, layouts, componentes)
+5. **Tests definidos**: Qué probar y cómo verificar éxito
+6. **Scope acotado**: Máximo 5-7 archivos afectados
+7. **Sin dependencias externas nuevas**: No requiere instalar paquetes no aprobados previo
+
+**Checklist pre-Autopilot:**
+```markdown
+## ✅ Checklist Autopilot — SPEC [ID]
+- [ ] SPEC tiene criterios de aceptación medibles
+- [ ] Todas las interfaces/tipos están definidos
+- [ ] Rutas de archivos son explícitas
+- [ ] No hay decisiones de diseño pendientes
+- [ ] Scope ≤ 7 archivos
+- [ ] Tests están especificados
+- [ ] No requiere nuevas dependencias
+- [ ] Branch limpio (sin cambios uncommitted)
+- [ ] El hook Stop de SOFIA está activo (valida Soft Gates)
+```
+
+**Flujo recomendado — "Dormir tranquilo":**
+1. INTEGRA genera la SPEC detallada y valida el checklist
+2. El humano revisa y aprueba la SPEC
+3. Se crea una rama dedicada: `git checkout -b feat/[spec-id]`
+4. Se selecciona **SOFIA** como agente activo
+5. Se establece el permiso en **Autopilot**
+6. Se pega el prompt: `Implementa la SPEC [ruta]. Sigue estrictamente los criterios de aceptación. Al terminar, genera checkpoint.`
+7. SOFIA trabaja autónomamente — el hook `Stop` fuerza validación de Soft Gates
+8. Al despertar: revisar checkpoint, compilación y diff del branch
+
+**Protecciones activas en Autopilot:**
+- El hook `Stop` de SOFIA bloquea el cierre hasta validar Soft Gates
+- El hook `SessionStart` inyecta contexto del proyecto automáticamente
+- La regla de escalamiento al humano sigue activa (pero en Autopilot se auto-responde)
+- El código queda en branch separado — `main` permanece intacto
+
+#### Niveles de permisos recomendados por agente
+
+| Agente | Nivel recomendado | Notas |
+|--------|-------------------|-------|
+| **INTEGRA** | Default Approvals | Las decisiones de arquitectura requieren supervisión |
+| **SOFIA** | Autopilot (con SPEC válida) / Bypass Approvals (generalmente) | Solo Autopilot con checklist completo |
+| **GEMINI** | Default Approvals | Infra y deploys necesitan confirmación |
+| **DEBY** | Bypass Approvals | Debugging necesita velocidad pero supervisión Visual |
+| **CRONISTA** | Bypass Approvals | Operaciones de bajo riesgo |
+
+### 16. 🔍 DEBUG EVENTS SNAPSHOT (VS Code 1.111+)
+
+Cuando un agente se comporta inesperadamente (no carga instrucciones, no activa skills, consume tokens excesivos):
+
+1. Adjuntar `#debugEventsSnapshot` como contexto en el chat
+2. Preguntar al agente: "¿Qué customizaciones se cargaron? ¿Por qué no se activó el skill X?"
+3. Revisar el panel Agent Debug para logs detallados
+
+**Uso principal:** DEBY puede usar `#debugEventsSnapshot` como herramienta forense para diagnosticar fallos de configuración de agentes.

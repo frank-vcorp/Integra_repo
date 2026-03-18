@@ -12,6 +12,13 @@ description: "Genera un Discovery de proyecto para mapear la estructura, stack t
 2. Identificar archivos de configuración (`package.json`, `tsconfig.json`, `docker-compose.yml`, etc.)
 3. Buscar documentación existente (`README.md`, docs/, etc.)
 
+### Paso 1.5: Detectar Herramientas (Toolbelt Awareness)
+Ejecutar el script de detección de CLIs para inventariar capacidades del entorno:
+```bash
+./integra-metodologia/scripts/detect-cli-tools.sh . .integra/cli-capabilities.json
+```
+*Si el script no existe o falla, proceder manualmente verificando `vercel --version`, `railway --version`, etc.*
+
 ### Paso 2: Identificar Stack
 Para cada capa (Frontend, Backend, DB, Hosting, CI/CD):
 1. Detectar la tecnología desde archivos de configuración

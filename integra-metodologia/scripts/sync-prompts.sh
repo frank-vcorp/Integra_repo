@@ -71,3 +71,49 @@ done
 
 echo ""
 echo -e "${GREEN}✓ Resultado: $INSTALLED instalados, $UPDATED actualizados, $UNCHANGED sin cambios${NC}"
+
+# =============================================================================
+# Sincronizar hooks de agentes a ~/.integra/hooks/
+# =============================================================================
+HOOKS_SRC="$SCRIPT_DIR/scripts/hooks"
+HOOKS_DIR="$HOME/.integra/hooks"
+
+if [ -d "$HOOKS_SRC" ]; then
+    echo ""
+    echo -e "${GREEN}🪝 Sincronizando hooks de agentes...${NC}"
+    echo "   Origen:  $HOOKS_SRC"
+    echo "   Destino: $HOOKS_DIR"
+    echo ""
+
+    mkdir -p "$HOOKS_DIR"
+
+    H_UPDATED=0
+    H_INSTALLED=0
+    H_UNCHANGED=0
+
+    for f in "$HOOKS_SRC"/*.sh; do
+        [ -f "$f" ] || continue
+        fname=$(basename "$f")
+        if [ -f "$HOOKS_DIR/$fname" ]; then
+            if ! diff -q "$f" "$HOOKS_DIR/$fname" > /dev/null 2>&1; then
+                cp "$f" "$HOOKS_DIR/$fname"
+                chmod +x "$HOOKS_DIR/$fname"
+                echo -e "   ${YELLOW}↻ Actualizado:${NC} $fname"
+                H_UPDATED=$((H_UPDATED + 1))
+            else
+                H_UNCHANGED=$((H_UNCHANGED + 1))
+            fi
+        else
+            cp "$f" "$HOOKS_DIR/$fname"
+            chmod +x "$HOOKS_DIR/$fname"
+            echo -e "   ${GREEN}+ Instalado:${NC} $fname"
+            H_INSTALLED=$((H_INSTALLED + 1))
+        fi
+    done
+
+    echo ""
+    echo -e "${GREEN}✓ Hooks: $H_INSTALLED instalados, $H_UPDATED actualizados, $H_UNCHANGED sin cambios${NC}"
+else
+    echo ""
+    echo -e "${YELLOW}⚠ No se encontró $HOOKS_SRC — hooks no instalados${NC}"
+fi

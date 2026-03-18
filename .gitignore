@@ -1,0 +1,20 @@
+# === INTEGRA Metodología ===
+
+# Datos locales de máquina (credenciales, capabilities detectadas)
+.integra/credentials.env
+.integra/cli-capabilities.json
+
+# VS Code workspace settings (personalización local)
+.vscode/
+
+# Node
+node_modules/
+dist/
+*.vsix
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
